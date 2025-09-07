@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Classic Chocolate Chip Cookies",
+    "description": "Soft and chewy chocolate chip cookies that are perfect for any occasion",
+    "instructions": "1. Preheat oven to 375°F (190°C)\n2. Cream together butter and sugars until light and fluffy\n3. Beat in eggs one at a time, then add vanilla\n4. In a separate bowl, whisk together flour, baking soda, and salt\n5. Gradually mix dry ingredients into wet ingredients\n6. Stir in chocolate chips\n7. Drop rounded tablespoons of dough onto ungreased baking sheets\n8. Bake for 9-11 minutes or until golden brown\n9. Cool on baking sheet for 2 minutes before removing to wire rack",
+    "prep_time": 15,
+    "cook_time": 10,
+    "servings": 24,
+    "category": "dessert",
+    "ingredients": [
+      { "name": "all-purpose flour", "quantity": 2.25, "unit": "cups" },
+      { "name": "baking soda", "quantity": 1, "unit": "tsp" },
+      { "name": "salt", "quantity": 1, "unit": "tsp" },
+      { "name": "butter", "quantity": 1, "unit": "cup" },
+      { "name": "granulated sugar", "quantity": 0.75, "unit": "cup" },
+      { "name": "brown sugar", "quantity": 0.75, "unit": "cup" },
+      { "name": "eggs", "quantity": 2, "unit": "pieces" },
+      { "name": "vanilla extract", "quantity": 2, "unit": "tsp" },
+      { "name": "chocolate chips", "quantity": 2, "unit": "cups" }
+    ]
+  },
+  {
+    "title": "Chicken Stir Fry",
+    "description": "Quick and healthy chicken stir fry with vegetables",
+    "instructions": "1. Cut chicken into bite-sized pieces\n2. Heat oil in a large wok or skillet over high heat\n3. Add chicken and stir-fry until cooked through\n4. Remove chicken and set aside\n5. Add vegetables to the wok and stir-fry for 3-4 minutes\n6. Return chicken to the wok\n7. Add sauce and toss everything together\n8. Cook for another 2 minutes\n9. Serve over rice",
+    "prep_time": 20,
+    "cook_time": 15,
+    "servings": 4,
+    "category": "dinner",
+    "ingredients": [
+      { "name": "chicken breast", "quantity": 1, "unit": "lb" },
+      { "name": "bell peppers", "quantity": 2, "unit": "pieces" },
+      { "name": "broccoli", "quantity": 1, "unit": "cup" },
+      { "name": "carrots", "quantity": 2, "unit": "pieces" },
+      { "name": "soy sauce", "quantity": 0.25, "unit": "cup" },
+      { "name": "vegetable oil", "quantity": 2, "unit": "tbsp" },
+      { "name": "garlic", "quantity": 3, "unit": "cloves" },
+      { "name": "ginger", "quantity": 1, "unit": "tsp" }
+    ]
+  },
+  {
+    "title": "Avocado Toast",
+    "description": "Simple and nutritious avocado toast perfect for breakfast",
+    "instructions": "1. Toast bread until golden brown\n2. Cut avocado in half and remove pit\n3. Scoop avocado into a bowl and mash with a fork\n4. Spread mashed avocado on toast\n5. Season with salt and pepper\n6. Add optional toppings",
+    "prep_time": 5,
+    "cook_time": 3,
+    "servings": 2,
+    "category": "breakfast",
+    "ingredients": [
+      { "name": "bread", "quantity": 2, "unit": "slices" },
+      { "name": "avocado", "quantity": 1, "unit": "piece" },
+      { "name": "salt", "quantity": 0.25, "unit": "tsp" },
+      { "name": "black pepper", "quantity": 0.25, "unit": "tsp" },
+      { "name": "lemon juice", "quantity": 0.5, "unit": "tsp" }
+    ]
+  }
+]

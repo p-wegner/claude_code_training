@@ -17,6 +17,12 @@ Use Claude Code's search tools to understand the recipe project codebase.
 - Group by functionality (recipes, ingredients, etc.)
 - Note any missing endpoints or inconsistencies
 
+**Bonus exercise - rewind afterwards**
+
+```
+"Create an openapi spec yaml for the API based on the route definitions" 
+```
+
 **2. Map the data models**
 ```
 "Find all model definitions and their relationships. Create a data model diagram."

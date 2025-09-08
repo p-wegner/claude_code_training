@@ -41,20 +41,17 @@ graph LR
         A[General Purpose]
         B[Broad Knowledge]
         C[Context Shared]
-        D[Direct Control]
     end
     
     subgraph "Sub-agents"
         E[Specialized]
         F[Deep Expertise]
         G[Context Isolated]
-        H[Autonomous]
     end
     
     A -->|Can handle anything| E
     B -->|Surface level| F
     C -->|Shared context| G
-    D -->|User-directed| H
 ```
 
 ### Sub-Agent Communication Flow
@@ -95,7 +92,7 @@ graph TD
     A --> A2[Specific Tasks]
     A --> A3[Success Criteria]
     
-    B --> B1[.claude/agents/]
+    B --> B1[.claude/agents]
     B --> B2[Agent-name.md]
     B --> B3[Metadata]
     

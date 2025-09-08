@@ -4,4 +4,8 @@
 - rewind feature (esc), plan mode, memory feature,
 - mcp support
 - context size matters! (fiction live bench, context rot, )
-- 
+- context engineering:
+  - scratchpad files, docs, todo lists, plans, prds, screenshots, ...
+  - subagents for specific tasks (when to use)
+- output format module rework needed
+- module 4: parameter processing wrong

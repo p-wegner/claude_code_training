@@ -42,7 +42,7 @@ graph LR
     A --> D[Execution Logic]
     A --> E[Output Format]
     
-    B --> B1[/command-name]
+    B --> B1[command-name]
     B --> B1[Descriptive and clear]
     
     C --> C1[Required Params]
@@ -117,7 +117,7 @@ Validation results grouped by severity with actionable suggestions.
 ### 1. Recipe Validation Command
 ```mermaid
 graph TD
-    A[/validate-recipe] --> B[Load Recipe]
+    A[validate-recipe] --> B[Load Recipe]
     B --> C[Check Required Fields]
     C --> D[Validate Ingredients]
     D --> E[Calculate Nutrition]
@@ -137,7 +137,7 @@ graph TD
 ### 2. Nutrition Analysis Command
 ```mermaid
 graph TD
-    A[/analyze-nutrition] --> B[Extract Ingredients]
+    A[analyze-nutrition] --> B[Extract Ingredients]
     B --> C[Calculate Values]
     C --> D[Assess Health Score]
     D --> E[Identify Warnings]
@@ -153,7 +153,7 @@ graph TD
 ### 3. Ingredient Converter Command
 ```mermaid
 graph TD
-    A[/convert-ingredients] --> B[Parse Input]
+    A[convert-ingredients] --> B[Parse Input]
     B --> C[Identify Units]
     C --> D[Apply Conversions]
     D --> E[Handle Allergens]
@@ -172,13 +172,11 @@ graph TD
 ```mermaid
 mindmap
   root((Slash Commands))
-    Recipe Commands
-      /validate-recipe
-      /analyze-nutrition
-      /convert-ingredients
-      /export-recipe
+    App Specific Commands
+      /create-new-recipe
     Development Commands
       /code-review
+      /update-readme
       /run-tests
       /check-coverage
       /deploy-check
@@ -194,23 +192,6 @@ mindmap
       /deploy-approval
 ```
 
-### Command Dependencies
-```mermaid
-graph TD
-    A[/validate-recipe] --> B[/analyze-nutrition]
-    A --> C[/convert-ingredients]
-    B --> D[Ingredient Database]
-    C --> D
-    D --> E[Unit Conversion Factors]
-    
-    F[/code-review] --> G[/run-tests]
-    G --> H[/check-coverage]
-    H --> I[Test Results]
-    
-    J[/deploy-check] --> K[/code-review]
-    J --> L[/run-tests]
-    J --> M[/security-scan]
-```
 
 ## Best Practices
 
@@ -394,26 +375,6 @@ graph TD
     C --> D[Validate Result]
     D --> E[Generate Output]
 ```
-
-## Performance Considerations
-
-### 1. Command Execution
-- Cache expensive operations
-- Use incremental processing for large datasets
-- Implement progress feedback
-- Support cancellation of long operations
-
-### 2. Resource Management
-- Clean up temporary files
-- Manage database connections
-- Control memory usage
-- Handle concurrent executions
-
-### 3. User Experience
-- Provide clear feedback
-- Support interruptible operations
-- Include estimated completion times
-- Offer recovery options for failures
 
 ## Next Steps
 

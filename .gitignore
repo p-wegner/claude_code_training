@@ -138,3 +138,4 @@ yarn.lock
 *.backup
 workshop-*.pdf
 workshop-*.pptx
+.aider*

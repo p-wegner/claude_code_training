@@ -1,741 +1,448 @@
-# Module 7: Advanced Parallel Development with Git Worktrees - Exercises
+# Module 7: Automated Parallel Development Orchestration - Exercises
 
-## Exercise 1: Basic Worktree Setup and Management
+## Module Overview
+This module focuses on building **orchestration systems** that completely hide the complexity of git worktrees and manual instance management. Users express what they want to accomplish, and the orchestrator handles everything automatically.
+
+## Core Philosophy
+**Hide Complexity, Reveal Simplicity**
+
+Users should never need to know about worktrees, git commands, or manual instance management. They just say what they want, and the orchestrator makes it happen.
+
+## Exercise 1: Building the Task Analyzer
 
 ### Objective
-Set up and manage git worktrees for parallel development, understanding the fundamentals and basic operations.
+Create a task analyzer subagent that can break down user requests into parallel executable tasks.
+
+### Key Learning
+**The orchestrator must understand user intent and automatically determine how to parallelize the work.**
 
 ### Tasks
 
-#### Task 1.1: Create Your First Worktree
-Create a git worktree for feature development with proper setup.
+#### Task 1.1: Create Task Analysis Subagent
+Create a subagent that analyzes user requests and creates execution plans.
 
 **Instructions:**
-1. Initialize a git repository if you don't have one
-2. Create a new worktree for a feature
-3. Verify the worktree was created successfully
-4. Explore the worktree structure
+1. Create the task-analyzer subagent
+2. Implement request parsing logic
+3. Add dependency detection capabilities
+4. Create resource planning features
 
-**Commands:**
-```bash
-# Initialize repository (if needed)
-git init
-git add .
-git commit -m "Initial commit"
+**Implementation:**
+```yaml
+---
+name: task-analyzer
+description: "Analyzes user requests and creates parallel execution plans"
+tools: Bash, Read, Write, Edit, MultiEdit, Grep, Glob, TodoWrite, Task
+---
 
-# Create worktree
-git worktree add -b feature-user-auth ../worktree-user-auth main
+You are a task analysis agent that breaks down user requests into parallel executable tasks.
 
-# List worktrees
-git worktree list
+## Analysis Process
+1. **Parse User Intent**: Extract specific tasks from user request
+2. **Identify Parallel Opportunities**: Find tasks that can run simultaneously
+3. **Map Dependencies**: Determine which tasks must wait for others
+4. **Resource Assessment**: Estimate worktree and instance requirements
+5. **Create Execution Plan**: Generate detailed parallel execution strategy
 
-# Switch to worktree
-cd ../worktree-user-auth
+## Example Analysis
+**Input:** "Implement user auth, fix payment bugs, update API docs"
 
-# Check worktree status
-git status
-git branch --show-current
+**Output:** JSON execution plan with 3 parallel tasks, dependencies, and resource requirements
 ```
 
-#### Task 1.2: Worktree Configuration
-Configure Claude Code settings for the new worktree.
+#### Task 1.2: Test Task Analysis
+Test the task analyzer with various user requests.
+
+**Test Cases:**
+```bash
+# Simple parallel tasks
+"Create frontend, build backend, setup database"
+
+# Complex dependencies
+"Implement user management, add authentication, create user dashboard, update docs"
+
+# Mixed priorities
+"Fix critical payment bug, add user profiles, optimize performance, update API docs"
+```
+
+**Success Criteria:**
+- [ ] Correctly identifies parallel tasks
+- [ ] Accurately maps dependencies
+- [ ] Estimates resource requirements
+- [ ] Generates executable JSON plans
+- [ ] Handles complex user requests
+
+### Exercise 2: Worktree Management Automation
+
+### Objective
+Create a worktree manager that handles all worktree operations automatically without user intervention.
+
+### Key Learning
+**Worktrees should be created, configured, and managed completely automatically.**
+
+### Tasks
+
+#### Task 2.1: Automated Worktree Creation
+Create a worktree manager that creates worktrees based on execution plans.
 
 **Instructions:**
-1. Create worktree-specific Claude Code configuration
-2. Set up statusline for worktree monitoring
-3. Create development documentation
-4. Test the configuration
+1. Create the worktree-manager subagent
+2. Implement automatic worktree creation
+3. Add intelligent worktree naming
+4. Create automatic configuration setup
 
-**Configuration:**
+**Features to Implement:**
+```bash
+# Automatic worktree creation from execution plan
+# Input: JSON plan with tasks
+# Output: Created and configured worktrees
+
+# Example automation
+plan='{"tasks": [{"name": "user-auth", "type": "feature"}, {"name": "payment-bugs", "type": "bugfix"}]}'
+worktree-manager --plan "$plan"
+# Creates: ../worktree-user-auth, ../worktree-payment-bugs
+# Configures: Each with task-specific settings
+# Returns: Worktree paths and status
+```
+
+#### Task 2.2: Intelligent Configuration
+Each worktree should be automatically configured for its specific task.
+
+**Configuration Examples:**
 ```json
+// worktree-user-auth/.claude/settings.json
 {
-  "output": {
-    "style": "structured",
-    "format": "markdown"
-  },
+  "output": {"style": "structured", "focus": "feature_development"},
   "statusline": {
-    "enabled": true,
-    "custom_indicators": {
-      "feature_dev": "🚀",
-      "testing": "🧪",
-      "debugging": "🐛"
-    },
-    "worktree_context": {
-      "name": "user-authentication",
-      "type": "feature"
-    }
+    "custom_indicators": {"auth": "🔐", "feature": "🚀"},
+    "worktree_context": {"name": "user-authentication", "task": "feature"}
+  }
+}
+
+// worktree-payment-bugs/.claude/settings.json  
+{
+  "output": {"style": "compact", "focus": "bug_fixing"},
+  "statusline": {
+    "custom_indicators": {"bug": "🐛", "payment": "💳"},
+    "worktree_context": {"name": "payment-bugs", "task": "bugfix"}
   }
 }
 ```
 
-#### Task 1.3: Multiple Worktree Management
-Create and manage multiple worktrees for different features.
+**Success Criteria:**
+- [ ] Automatic worktree creation from plans
+- [ ] Intelligent task-specific configuration
+- [ ] Proper isolation between worktrees
+- [ ] Resource monitoring and limits
+- [ ] Error handling and rollback
 
-**Instructions:**
-1. Create additional worktrees for different features
-2. Practice switching between worktrees
-3. Monitor worktree status
-4. Clean up unused worktrees
-
-**Commands:**
-```bash
-# Create multiple worktrees
-git worktree add -b feature-payment ../worktree-payment main
-git worktree add -b feature-api-docs ../worktree-api-docs main
-
-# Work in different worktrees
-cd ../worktree-payment
-echo "Payment feature implementation" > feature.md
-
-cd ../worktree-api-docs
-echo "API documentation update" > docs.md
-
-# List all worktrees
-git worktree list
-
-# Remove a worktree
-git worktree remove ../worktree-api-docs
-```
-
-### Success Criteria
-- [ ] Successfully created at least 2 worktrees
-- [ ] Configured Claude Code settings for worktrees
-- [ ] Switched between worktrees without issues
-- [ ] Managed worktree lifecycle (create, list, remove)
-- [ ] Understood worktree isolation concept
-
----
-
-## Exercise 2: Subagent Integration with Worktrees
+### Exercise 3: Instance Spawning and Management
 
 ### Objective
-Integrate subagents with worktrees for specialized parallel development tasks.
+Create an instance spawner that automatically launches and manages Claude Code instances.
+
+### Key Learning
+**Claude Code instances should be spawned automatically as background processes.**
 
 ### Tasks
 
-#### Task 2.1: Create Worktree-Specific Subagents
-Create specialized subagents for different worktree types.
+#### Task 3.1: Background Instance Spawning
+Create a system that launches Claude Code instances in the background.
 
 **Instructions:**
-1. Create a feature development subagent
-2. Create a bug fix subagent
-3. Create a testing subagent
-4. Configure subagent tools and permissions
+1. Create the instance-spawner subagent
+2. Implement background process management
+3. Add health monitoring capabilities
+4. Create result collection systems
 
-**Feature Development Subagent:**
-```yaml
----
-name: feature-developer
-description: "Specialized agent for feature development in isolated worktrees"
-tools: Bash, Read, Write, Edit, MultiEdit, Grep, Glob, TodoWrite, Task
----
-
-You are a specialized feature development agent working within a git worktree.
-
-## Responsibilities
-- Implement features in isolated worktree environments
-- Ensure code quality and testing standards
-- Coordinate with other subagents when needed
-- Maintain development documentation
-
-## Workflow
-1. Analyze feature requirements
-2. Implement feature functionality
-3. Write comprehensive tests
-4. Update documentation
-5. Prepare for integration
-```
-
-#### Task 2.2: Launch Subagents in Worktrees
-Launch and manage subagents across different worktrees.
-
-**Instructions:**
-1. Use the Task tool to launch subagents
-2. Monitor subagent activity
-3. Coordinate between subagents
-4. Handle subagent communication
-
-**Example Task Launch:**
-```python
-Task(
-    description="Implement user authentication feature",
-    prompt="Implement a complete user authentication system including login, registration, and password reset functionality. Work in the worktree-user-auth directory and follow the development guidelines.",
-    subagent_type="feature-developer"
-)
-```
-
-#### Task 2.3: Cross-Worktree Coordination
-Implement coordination between subagents in different worktrees.
-
-**Instructions:**
-1. Create a coordinator subagent
-2. Implement communication channels
-3. Handle task dependencies
-4. Synchronize work across worktrees
-
-**Coordinator Subagent:**
-```yaml
----
-name: worktree-coordinator
-description: "Coordinates multiple subagents working across different worktrees"
-tools: Bash, Read, Write, Edit, MultiEdit, Grep, Glob, TodoWrite, Task
----
-
-You are a coordinator agent managing multiple subagents across different worktrees.
-
-## Responsibilities
-- Distribute tasks to appropriate subagents
-- Monitor progress across all worktrees
-- Handle conflicts and dependencies
-- Consolidate results and reports
-
-## Coordination Workflow
-1. Analyze overall task requirements
-2. Break down into worktree-specific tasks
-3. Launch specialized subagents
-4. Monitor and coordinate execution
-5. Consolidate and validate results
-```
-
-### Success Criteria
-- [ ] Created at least 3 different subagent types
-- [ ] Successfully launched subagents in worktrees
-- [ ] Implemented basic coordination between subagents
-- [ ] Handled cross-worktree communication
-- [ ] Demonstrated parallel task execution
-
----
-
-## Exercise 3: Slash Commands for Worktree Management
-
-### Objective
-Create and use slash commands for efficient worktree management and task automation.
-
-### Tasks
-
-#### Task 3.1: Basic Worktree Commands
-Create slash commands for basic worktree operations.
-
-**Instructions:**
-1. Create `/worktree-create` command
-2. Create `/worktree-list` command
-3. Create `/worktree-switch` command
-4. Create `/worktree-remove` command
-
-**Example Command:**
-```markdown
-# Command: /worktree-create
-
-## Feature name: $ARGUMENTS
-
-Creates a new git worktree for parallel feature development.
-
-## Usage:
-/worktree-create "user-authentication"
-/worktree-create "payment-processing"
-
-## Actions:
-1. Create new git worktree with feature branch
-2. Set up worktree-specific configuration
-3. Initialize development environment
-4. Launch feature-development subagent
-5. Configure statusline monitoring
-```
-
-#### Task 3.2: Advanced Worktree Commands
-Create slash commands for advanced worktree operations.
-
-**Instructions:**
-1. Create `/worktree-status` command
-2. Create `/worktree-sync` command
-3. Create `/worktree-merge` command
-4. Create `/worktree-cleanup` command
-
-**Status Command Example:**
-```markdown
-# Command: /worktree-status
-
-## Filter: $ARGUMENTS
-
-Shows status of all active worktrees and their tasks.
-
-## Usage:
-/worktree-status "all"
-/worktree-status "active"
-/worktree-status "completed"
-
-## Output:
-- Worktree names and locations
-- Current branch and commit
-- Active subagents and their status
-- Task progress and completion
-- Resource usage and performance
-```
-
-#### Task 3.3: Parallel Task Commands
-Create slash commands for managing parallel tasks across worktrees.
-
-**Instructions:**
-1. Create `/parallel-task` command
-2. Create `/task-status` command
-3. Create `/task-coordination` command
-4. Test parallel task execution
-
-**Parallel Task Command:**
-```markdown
-# Command: /parallel-task
-
-## Task type: $ARGUMENTS
-
-Launches parallel development tasks across multiple worktrees.
-
-## Usage:
-/parallel-task "bug-fixes"
-/parallel-task "feature-development"
-/parallel-task "code-review"
-
-## Actions:
-1. Analyze task requirements
-2. Create appropriate worktrees
-3. Launch specialized subagents
-4. Monitor parallel execution
-5. Consolidate results
-```
-
-### Success Criteria
-- [ ] Created at least 4 basic worktree commands
-- [ ] Created at least 4 advanced worktree commands
-- [ ] Created parallel task management commands
-- [ ] Tested all commands successfully
-- [ ] Demonstrated efficient worktree management
-
----
-
-## Exercise 4: Hook-Based Automation
-
-### Objective
-Implement hooks for automated worktree workflows and task management.
-
-### Tasks
-
-#### Task 4.1: Worktree Creation Hooks
-Create hooks that trigger when worktrees are created.
-
-**Instructions:**
-1. Create `post-worktree-create` hook
-2. Implement automatic environment setup
-3. Configure worktree-specific settings
-4. Launch appropriate subagents
-
-**Hook Example:**
+**Implementation Strategy:**
 ```bash
-#!/bin/bash
-# .claude/hooks/post-worktree-create.sh
-
-input=$(cat)
-worktree_path=$(echo "$input" | jq -r '.worktree_path // empty')
-feature_name=$(echo "$input" | jq -r '.feature_name // empty')
-
-echo "Setting up worktree: $worktree_path for feature: $feature_name"
-
-# Create worktree-specific configuration
-mkdir -p "$worktree_path/.claude"
-
-# Copy and customize configuration
-cp .claude/settings.json "$worktree_path/.claude/"
-
-# Create development documentation
-cat > "$worktree_path/DEVELOPMENT.md" << EOF
-# Feature Development: $feature_name
-- Worktree: $worktree_path
-- Created: $(date)
-- Status: In Progress
-EOF
-
-# Set up development environment
-cd "$worktree_path"
-
-# Install dependencies if needed
-if [ -f "package.json" ]; then
-    npm install
-elif [ -f "requirements.txt" ]; then
-    pip install -r requirements.txt
-fi
-
-echo "Worktree setup completed for $feature_name"
+# Spawn Claude Code instance in background
+spawn_instance() {
+    local worktree_path="$1"
+    local subagent_type="$2"
+    local instance_id="$3"
+    
+    cd "$worktree_path"
+    
+    # Launch Claude Code in background
+    claude-code \
+        --subagent "$subagent_type" \
+        --instance-id "$instance_id" \
+        --task "$task_description" \
+        > ".claude/instance-$instance_id.log" 2>&1 &
+    
+    local pid=$!
+    echo "Spawned instance $instance_id with PID $pid"
+    
+    # Track instance for monitoring
+    echo "$pid:$worktree_path:$instance_id" >> ".claude/instances.txt"
+}
 ```
 
-#### Task 4.2: Task Completion Hooks
-Create hooks that trigger when tasks are completed.
+#### Task 3.2: Health Monitoring
+Implement monitoring for spawned instances.
 
-**Instructions:**
-1. Create `post-task-complete` hook
-2. Implement validation and reporting
-3. Trigger follow-up tasks
-4. Update worktree status
-
-**Hook Example:**
+**Monitoring Features:**
 ```bash
-#!/bin/bash
-# .claude/hooks/post-task-complete.sh
-
-input=$(cat)
-worktree_path=$(echo "$input" | jq -r '.worktree_path // empty')
-task_name=$(echo "$input" | jq -r '.task_name // empty')
-result=$(echo "$input" | jq -r '.result // empty')
-
-echo "Task completed: $task_name in $worktree_path"
-
-# Update worktree status
-cd "$worktree_path"
-
-# Create completion report
-cat > "TASK_REPORT.md" << EOF
-# Task Completion Report
-
-## Task: $task_name
-## Result: $result
-## Completed: $(date)
-
-## Files Modified:
-$(git diff --name-only HEAD~1)
-
-## Next Steps:
-- [ ] Review and validate changes
-- [ ] Run integration tests
-- [ ] Prepare for merge
-EOF
-
-# Trigger integration tests
-if [[ "$task_name" == *"test"* ]] || [[ "$task_name" == *"implementation"* ]]; then
-    echo "Triggering integration tests..."
-    # Launch integration test subagent
-fi
-```
-
-#### Task 4.3: Cross-Worktree Sync Hooks
-Create hooks for synchronizing changes across worktrees.
-
-**Instructions:**
-1. Create `cross-worktree-sync` hook
-2. Implement conflict detection
-3. Handle safe synchronization
-4. Monitor sync status
-
-**Hook Example:**
-```bash
-#!/bin/bash
-# .claude/hooks/cross-worktree-sync.sh
-
-input=$(cat)
-source_worktree=$(echo "$input" | jq -r '.source_worktree // empty')
-sync_type=$(echo "$input" | jq -r '.sync_type // empty')
-
-echo "Syncing $sync_type from $source_worktree to other worktrees"
-
-# Get list of active worktrees
-worktrees=$(git worktree list | grep -v "(bare)" | awk '{print $1}')
-
-for worktree in $worktrees; do
-    if [ "$worktree" != "$source_worktree" ]; then
-        echo "Syncing to $worktree"
+# Monitor instance health
+monitor_instances() {
+    while IFS=: read -r pid worktree instance_id; do
+        if ! kill -0 "$pid" 2>/dev/null; then
+            echo "Instance $instance_id (PID $pid) is not running"
+            # Handle restart or failure
+        fi
         
-        case "$sync_type" in
-            "config")
-                cp "$source_worktree/.claude/settings.json" "$worktree/.claude/"
-                ;;
-            "dependencies")
-                if [ -f "$source_worktree/package.json" ]; then
-                    cp "$source_worktree/package.json" "$worktree/"
-                    cd "$worktree"
-                    npm install
-                fi
-                ;;
-        esac
-    fi
-done
-
-echo "Cross-worktree sync completed"
+        # Check resource usage
+        ps -p "$pid" -o pid,ppid,pcpu,pmem,time,etime
+    done < ".claude/instances.txt"
+}
 ```
 
-### Success Criteria
-- [ ] Created worktree creation hooks
-- [ ] Created task completion hooks
-- [ ] Created cross-worktree sync hooks
-- [ ] Tested all hook functionality
-- [ ] Demonstrated automated workflow
+**Success Criteria:**
+- [ ] Automatic background instance spawning
+- [ ] Health monitoring and restart capabilities
+- [ ] Resource usage tracking
+- [ ] Result collection and logging
+- [ ] Graceful error handling
 
----
-
-## Exercise 5: Advanced Statusline Configuration
+### Exercise 4: Building the Main Orchestrator
 
 ### Objective
-Configure advanced statusline for monitoring multiple worktrees and parallel tasks.
+Create the main orchestrator that ties everything together into a seamless user experience.
+
+### Key Learning
+**Users should interact with a simple command, not complex orchestration systems.**
 
 ### Tasks
 
-#### Task 5.1: Multi-Worktree Statusline
-Configure statusline to monitor multiple worktrees.
+#### Task 4.1: Main Orchestration Command
+Create the /parallel-dev command that users will actually use.
 
 **Instructions:**
-1. Create multi-worktree statusline configuration
-2. Configure worktree indicators and colors
-3. Set up resource monitoring
-4. Test statusline functionality
+1. Create the parallel-dev slash command
+2. Implement the complete orchestration workflow
+3. Add progress monitoring and status updates
+4. Create user-friendly output formatting
 
-**Configuration Example:**
-```json
-{
-  "statusline": {
-    "enabled": true,
-    "refresh_rate": 1500,
-    "multi_worktree": {
-      "enabled": true,
-      "max_display": 5,
-      "show": ["name", "branch", "status", "agent", "progress"],
-      "sort_by": "activity",
-      "indicators": {
-        "active": "🟢",
-        "idle": "🟡",
-        "completed": "✅",
-        "error": "❌",
-        "merging": "🔄"
-      }
-    },
-    "parallel_tasks": {
-      "enabled": true,
-      "show_queue": true,
-      "show_active": true,
-      "show_completed": true,
-      "max_history": 10
-    }
-  }
-}
-```
-
-#### Task 5.2: Resource Monitoring Statusline
-Configure statusline for resource monitoring and alerts.
-
-**Instructions:**
-1. Set up disk usage monitoring
-2. Configure memory usage tracking
-3. Create alert thresholds
-4. Test alert functionality
-
-**Resource Monitoring Configuration:**
-```json
-{
-  "statusline": {
-    "resource_monitoring": {
-      "enabled": true,
-      "show_disk_usage": true,
-      "show_memory_usage": true,
-      "show_cpu_usage": true,
-      "alerts": {
-        "disk_threshold": 80,
-        "memory_threshold": 85,
-        "cpu_threshold": 90,
-        "worktree_count_threshold": 10
-      }
-    }
-  }
-}
-```
-
-#### Task 5.3: Interactive Statusline Features
-Configure interactive statusline features.
-
-**Instructions:**
-1. Set up interactive actions
-2. Configure keyboard shortcuts
-3. Create notification system
-4. Test interactive features
-
-**Interactive Configuration:**
-```json
-{
-  "statusline": {
-    "interactive": {
-      "enabled": true,
-      "actions": {
-        "worktree_switch": true,
-        "worktree_create": true,
-        "worktree_remove": true,
-        "task_pause": true,
-        "task_resume": true,
-        "task_cancel": true,
-        "resource_cleanup": true
-      },
-      "shortcuts": {
-        "toggle_worktree_view": "Ctrl+W",
-        "toggle_resource_view": "Ctrl+R",
-        "toggle_task_view": "Ctrl+T",
-        "quick_worktree_switch": "Ctrl+Shift+W"
-      }
-    }
-  }
-}
-```
-
-### Success Criteria
-- [ ] Configured multi-worktree statusline
-- [ ] Set up resource monitoring
-- [ ] Created interactive statusline features
-- [ ] Tested all statusline functionality
-- [ ] Demonstrated comprehensive monitoring
-
----
-
-## Exercise 6: Production Workflow Implementation
-
-### Objective
-Implement a complete production-ready parallel development workflow.
-
-### Tasks
-
-#### Task 6.1: Complete Parallel Development Workflow
-Implement a complete workflow using all learned concepts.
-
-**Instructions:**
-1. Set up multiple worktrees for different task types
-2. Configure appropriate subagents for each worktree
-3. Set up hooks for automation
-4. Configure comprehensive statusline monitoring
-5. Implement slash commands for management
-
-**Workflow Components:**
-- Feature development worktrees
-- Bug fix worktrees
-- Testing worktrees
-- Documentation worktrees
-- Code review worktrees
-
-#### Task 6.2: CI/CD Integration
-Integrate the parallel development workflow with CI/CD.
-
-**Instructions:**
-1. Create GitHub Actions workflow
-2. Set up automated testing
-3. Configure deployment pipelines
-4. Implement worktree cleanup
-5. Set up monitoring and alerts
-
-**CI/CD Example:**
-```yaml
-name: Parallel Development Workflow
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    types: [opened, synchronize]
-
-jobs:
-  setup-worktrees:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Set up worktrees
-        run: |
-          git worktree add -b test-integration ../worktree-integration HEAD
-          git worktree add -b test-performance ../worktree-performance HEAD
-      
-      - name: Run parallel tests
-        run: |
-          cd ../worktree-integration && npm run test:integration &
-          cd ../worktree-performance && npm run test:performance &
-          wait
-```
-
-#### Task 6.3: Team Collaboration Setup
-Set up team collaboration features.
-
-**Instructions:**
-1. Configure shared worktree patterns
-2. Set up conflict resolution workflows
-3. Create team communication channels
-4. Implement progress sharing
-5. Set up documentation workflows
-
-**Team Configuration:**
-```json
-{
-  "team_workflows": {
-    "feature_branching": {
-      "worktree_per_feature": true,
-      "auto_cleanup": true,
-      "cleanup_delay": "7d",
-      "notification_rules": {
-        "on_create": ["team"],
-        "on_complete": ["assignee", "reviewer"],
-        "on_error": ["team", "lead"]
-      }
-    },
-    "code_review": {
-      "dedicated_worktree": true,
-      "auto_assign": true,
-      "parallel_reviews": true
-    }
-  }
-}
-```
-
-### Success Criteria
-- [ ] Implemented complete parallel development workflow
-- [ ] Integrated with CI/CD pipeline
-- [ ] Set up team collaboration features
-- [ ] Tested all components together
-- [ ] Demonstrated production-ready system
-
----
-
-## Exercise Solutions and Verification
-
-### Verification Commands
+**User Experience Design:**
 ```bash
-# Verify worktree setup
-git worktree list
-ls -la ../worktree-*/
+# User types:
+/parallel-dev "Implement user auth, fix payment bugs, update docs"
 
-# Verify subagent functionality
-# Check .claude/agents/ directory for subagent configs
+# Orchestrator responds:
+🚀 **Parallel Development Orchestrator Started**
 
-# Verify slash commands
-# Test each slash command with different arguments
+**Tasks Identified:**
+- Task 1: User Authentication (feature-development subagent)
+- Task 2: Payment Bug Fixes (bugfix subagent)  
+- Task 3: API Documentation (documentation subagent)
 
-# Verify hooks
-# Check .claude/hooks/ directory for hook scripts
+**Worktrees Created:**
+- ../worktree-user-auth (Instance 1 starting...)
+- ../worktree-payment-bugs (Instance 2 starting...)
+- ../worktree-api-docs (Instance 3 starting...)
 
-# Verify statusline
-# Monitor statusline for multi-worktree information
+**Progress Monitoring:**
+🟢 Task 1: 25% complete - JWT implementation in progress
+🟡 Task 2: 10% complete - Investigating payment timeout issues
+⏳ Task 3: Waiting for dependencies (Task 1, 2)
+
+**Estimated Completion:** ~45 minutes
 ```
 
-### Common Issues and Solutions
+#### Task 4.2: Status and Control Commands
+Create commands for monitoring and controlling the orchestra.
 
-**Issue: Worktree conflicts**
-**Solution**: Use proper branch management and conflict resolution hooks
+**Commands to Implement:**
+```bash
+/orchestra-status "summary"     # High-level overview
+/orchestra-status "detailed"    # Detailed progress per task
+/orchestra-status "resources"    # Resource utilization
 
-**Issue: Subagent communication failures**
-**Solution**: Implement proper error handling and retry mechanisms
+/orchestra-control "pause"       # Pause all instances
+/orchestra-control "resume"      # Resume paused instances
+/orchestra-control "cancel"      # Cancel all orchestration
 
-**Issue: Resource exhaustion**
-**Solution**: Configure resource monitoring and automatic cleanup
+/merge-results "automatic"      # Smart automatic merging
+/cleanup-orchestra "success"     # Clean up successful runs
+```
 
-**Issue: Hook execution failures**
-**Solution**: Add comprehensive logging and error recovery
+**Success Criteria:**
+- [ ] Simple user interface that hides complexity
+- [ ] Real-time status monitoring
+- [ ] User-friendly progress updates
+- [ ] Robust error handling
+- [ ] Automatic cleanup and integration
 
-**Issue: Statusline performance issues**
-**Solution**: Optimize refresh rates and implement caching
+### Exercise 5: Advanced Orchestration Patterns
 
-### Next Steps
-After completing these exercises, you should be able to:
-- Create and manage git worktrees for parallel development
-- Integrate subagents with worktree workflows
-- Implement comprehensive automation with hooks
-- Monitor complex workflows with advanced statusline
-- Build production-ready parallel development systems
+### Objective
+Implement sophisticated orchestration patterns for complex real-world scenarios.
 
-Continue to real-world projects to apply these concepts in practice.
+### Key Learning
+**Real orchestration needs to handle dependencies, failures, and complex workflows.**
+
+### Tasks
+
+#### Task 5.1: Dependency Management
+Implement handling of complex task dependencies.
+
+**Scenario:** Some tasks must wait for others to complete.
+
+**Implementation:**
+```bash
+# Example dependency graph
+{
+  "tasks": [
+    {"name": "database-schema", "dependencies": []},
+    {"name": "api-endpoints", "dependencies": ["database-schema"]},
+    {"name": "frontend-components", "dependencies": ["api-endpoints"]},
+    {"name": "documentation", "dependencies": ["api-endpoints", "frontend-components"]},
+    {"name": "testing", "dependencies": ["api-endpoints", "frontend-components"]}
+  ]
+}
+
+# Orchestrator should:
+# Phase 1: Launch database-schema (no dependencies)
+# Phase 2: Launch api-endpoints (waits for database-schema)
+# Phase 3: Launch frontend-components (waits for api-endpoints)
+# Phase 4: Launch documentation and testing (both wait for dependencies)
+```
+
+#### Task 5.2: Error Recovery and Fallbacks
+Implement robust error handling and recovery mechanisms.
+
+**Error Scenarios to Handle:**
+```bash
+# Instance failure detection and restart
+# Worktree creation failures and rollback
+# Merge conflict resolution
+# Resource exhaustion handling
+# Network connectivity issues
+```
+
+**Recovery Strategies:**
+```bash
+# Automatic restart for transient failures
+# Fallback to sequential execution if parallel fails
+# Partial result preservation and recovery
+# User notification and manual intervention options
+```
+
+#### Task 5.3: Resource Optimization
+Implement intelligent resource management.
+
+**Optimization Features:**
+```bash
+# Dynamic instance scaling based on system resources
+# Resource usage monitoring and limits
+# Priority-based resource allocation
+# Load balancing across multiple instances
+# Memory and CPU usage optimization
+```
+
+**Success Criteria:**
+- [ ] Complex dependency handling
+- [ ] Robust error recovery
+- [ ] Intelligent resource optimization
+- [ ] Performance monitoring and tuning
+- [ ] Production-ready reliability
+
+### Exercise 6: Real-World Orchestration Scenarios
+
+### Objective
+Apply orchestration patterns to solve real-world development challenges.
+
+### Key Learning
+**Orchestration should solve practical problems that developers face every day.**
+
+### Scenarios
+
+#### Scenario 1: Emergency Bug Response Team
+**User Request:** `/parallel-dev "Investigate payment timeout, fix database connection, update monitoring"`
+
+**Orchestrator Response:**
+```bash
+🚨 **Emergency Response Orchestra Started**
+
+**Priority Tasks Launched:**
+- Investigation: 🔍 Analyzing logs and reproducing issues
+- Bug Fix: 🔧 Developing immediate fixes
+- Monitoring: 📊 Setting up alerts and dashboards
+
+**Status:** All instances running in parallel
+**ETA:** 15 minutes for initial resolution
+```
+
+#### Scenario 2: Feature Development Team
+**User Request:** `/parallel-dev "Implement user authentication, create admin dashboard, add user management"`
+
+**Orchestrator Response:**
+```bash
+🚀 **Feature Development Orchestra Started**
+
+**Tasks Identified:**
+- User Authentication: 🟢 80% - JWT implementation complete
+- Admin Dashboard: 🟡 45% - React components in progress  
+- User Management: 🟠 30% - API endpoints in progress
+
+**Dependencies:** Dashboard and User Management wait for Auth
+**Integration:** Automatic merge and testing when all complete
+```
+
+#### Scenario 3: Product Launch Preparation
+**User Request:** `/parallel-dev "Finalize features, run comprehensive tests, update documentation, prepare deployment"`
+
+**Orchestrator Response:**
+```bash
+🚀 **Launch Preparation Orchestra Started**
+
+**Complex Workflow:**
+- Phase 1: Features → Tests → Documentation → Deployment
+- Parallel execution where possible
+- Automatic handoffs between phases
+- Progress tracking with milestone alerts
+- Rollback planning and testing
+```
+
+### Success Criteria for Complete Module
+
+#### Technical Proficiency
+- [ ] Built complete orchestration system from scratch
+- [ ] Implemented automated worktree management
+- [ ] Created background instance spawning
+- [ ] Built robust error handling and recovery
+- [ ] Implemented resource optimization
+
+#### User Experience
+- [ ] Simple commands that hide all complexity
+- [ ] Real-time status monitoring
+- [ ] User-friendly progress updates
+- [ ] Automatic cleanup and integration
+- [ ] Intuitive error messages and recovery
+
+#### Real-World Application
+- [ ] Solved practical development problems
+- [ ] Demonstrated significant time savings
+- [ ] Showcased production-ready reliability
+- [ ] Implemented sophisticated orchestration patterns
+- [ ] Created scalable and maintainable systems
+
+### The Ultimate Test
+
+**Can a user with no knowledge of git worktrees or parallel development successfully:**
+
+1. **Express what they want to accomplish** in natural language
+2. **Launch complex parallel development** with a single command
+3. **Monitor progress** without understanding the underlying complexity
+4. **Get integrated results** without manual merging
+5. **Have a clean workspace** after completion
+
+If yes, your orchestration system is successful!
+
+## Next Steps
+
+After completing these exercises, you'll have built a sophisticated orchestration system that completely transforms how developers approach parallel development. The complexity is hidden, the user experience is simple, and the productivity gains are dramatic.
+
+Continue to real-world projects and apply these orchestration patterns to solve actual development challenges.

@@ -7,56 +7,11 @@
 - Create custom output formats for specific use cases
 - Understand when and how to use different output formats
 
-## Output Formatting Concepts
-
-### Why Output Formatting Matters
-```mermaid
-graph TD
-    A[Output Formatting] --> B[Improved Readability]
-    A --> C[Consistent Communication]
-    A --> D[Better Integration]
-    A --> E[Enhanced Productivity]
-    
-    B --> B1[Clear Structure]
-    B --> B2[Highlighted Syntax]
-    B --> B3[Organized Information]
-    
-    C --> C1[Team Standards]
-    C --> C2[Documentation]
-    C --> C3[Code Reviews]
-    
-    D --> D1[Tool Integration]
-    D --> D2[CI/CD Pipelines]
-    D --> D3[Reporting Systems]
-    
-    E --> E1[Faster Understanding]
-    E --> E2[Quick Decision Making]
-    E --> E3[Reduced Cognitive Load]
-```
-
-### Types of Output Formats
-
-1. **Structured Text Output**
-   - JSON formatting
-   - Table layouts
-   - Code blocks with syntax highlighting
-   - Hierarchical information display
-
-2. **Visual Output**
-   - Progress indicators
-   - Status displays
-   - Interactive elements
-   - Color-coded information
-
-3. **Machine-Readable Output**
-   - Structured data formats
-   - Log files
-   - Integration outputs
-   - Report generation
-
 ## Claude Code Output Configuration
 
 ### Settings Configuration
+Claude Code uses JSON configuration files to control output formatting. Settings can be configured at different levels:
+
 ```mermaid
 graph LR
     A[Output Settings] --> B[Global Settings]
@@ -75,31 +30,39 @@ graph LR
     D3 --> J[Experimentation]
 ```
 
+### Output Styles
+Claude Code supports different output styles for formatting responses:
+
+1. **Structured Output** - Organized, hierarchical information display
+2. **Markdown** - Standard markdown formatting with headers, lists, and code blocks
+3. **Code Blocks** - Syntax-highlighted code examples
+4. **Compact** - Minimal, concise output format
+
 ### Statusline Configuration
-The statusline provides real-time feedback during development:
+The statusline provides real-time feedback during development and shows:
 
 ```mermaid
 graph TB
     subgraph "Statusline Components"
-        A[Current Task] --> B[Progress Indicator]
-        B --> C[File Operations]
-        C --> D[Error Status]
-        D --> E[Performance Metrics]
+        A[Current Model] --> B[Cost Tracking]
+        B --> C[Usage Statistics]
+        C --> D[Task Progress]
+        D --> E[Error Status]
     end
     
     subgraph "Information Types"
-        F[Task Name]
-        G[Completion %]
-        H[Files Modified]
-        I[Error Count]
-        J[Execution Time]
+        F[Model Name]
+        G[Token Count]
+        H[API Cost]
+        I[Task Status]
+        J[Error Count]
     end
     
     A --> F
     B --> G
-    C --> H
-    D --> I
-    E --> J
+    B --> H
+    C --> I
+    D --> J
 ```
 
 ## Practical Configuration Examples
@@ -108,54 +71,120 @@ graph TB
 ```json
 {
   "output": {
-    "format": "structured",
-    "style": "compact",
-    "colors": true,
-    "timestamps": true,
-    "progress": true
+    "style": "structured",
+    "format": "markdown",
+    "code_blocks": true,
+    "syntax_highlighting": true
   },
   "statusline": {
     "enabled": true,
-    "position": "bottom",
-    "show": ["task", "progress", "files", "errors"],
-    "refresh_rate": 1000
+    "show_model": true,
+    "show_cost": true,
+    "show_usage": true,
+    "position": "bottom"
   }
 }
 ```
 
-### Advanced Configuration for Recipe Project
+### Advanced Configuration for Development Workflow
 ```json
 {
   "output": {
-    "format": "detailed",
-    "style": "recipe-themed",
-    "colors": {
-      "success": "#4CAF50",
-      "error": "#f44336",
-      "warning": "#ff9800",
-      "info": "#2196F3"
-    },
+    "style": "structured",
+    "format": "markdown",
     "sections": {
-      "recipe_analysis": {
-        "show_nutrition": true,
-        "show_ingredients": true,
-        "format": "card"
+      "code_review": {
+        "show_diffs": true,
+        "show_line_numbers": true,
+        "syntax_highlighting": true
       },
-      "validation_results": {
-        "show_errors": true,
-        "show_warnings": true,
-        "show_suggestions": true
+      "test_results": {
+        "show_pass_fail": true,
+        "show_coverage": true,
+        "format": "table"
+      },
+      "error_reports": {
+        "show_stack_trace": true,
+        "show_file_location": true,
+        "format": "structured"
       }
     }
   },
   "statusline": {
     "enabled": true,
-    "theme": "culinary",
+    "refresh_rate": 1000,
+    "show": ["model", "cost", "usage", "task_progress"],
+    "theme": "default"
+  }
+}
+```
+
+### Project-Specific Configuration
+```json
+{
+  "output": {
+    "style": "compact",
+    "format": "markdown",
+    "project_specific": {
+      "api_endpoints": {
+        "show_method": true,
+        "show_endpoint": true,
+        "show_status_codes": true
+      },
+      "database_operations": {
+        "show_query": true,
+        "show_execution_time": true,
+        "show_affected_rows": true
+      }
+    }
+  },
+  "statusline": {
+    "enabled": true,
     "custom_indicators": {
-      "cooking": "🍳",
-      "analyzing": "🔍",
-      "validating": "✅",
-      "error": "❌"
+      "api_development": "🔌",
+      "database_work": "🗄️",
+      "testing": "🧪",
+      "deployment": "🚀"
+    }
+  }
+}
+```
+
+## Statusline Setup and Customization
+
+### Basic Statusline
+```json
+{
+  "statusline": {
+    "enabled": true,
+    "position": "bottom",
+    "show": ["model", "cost", "usage"],
+    "refresh_rate": 1000
+  }
+}
+```
+
+### Advanced Statusline with Custom Indicators
+```json
+{
+  "statusline": {
+    "enabled": true,
+    "position": "bottom",
+    "refresh_rate": 500,
+    "show": ["model", "cost", "usage", "task_progress", "errors"],
+    "custom_indicators": {
+      "coding": "💻",
+      "debugging": "🐛",
+      "testing": "🧪",
+      "deploying": "🚀",
+      "reviewing": "👀",
+      "documenting": "📝"
+    },
+    "color_scheme": {
+      "success": "#4CAF50",
+      "error": "#f44336",
+      "warning": "#ff9800",
+      "info": "#2196F3"
     }
   }
 }
@@ -164,60 +193,175 @@ graph TB
 ## Hands-on Exercises
 
 ### Exercise 1: Basic Output Configuration
-**Objective**: Set up basic output formatting for the recipe project.
+**Objective**: Set up basic output formatting for your development workflow.
 
 **Tasks**:
 1. **Create a basic configuration file**
-```
-"Create a .claude/settings.json file with basic output formatting"
+```bash
+# Create .claude directory
+mkdir -p .claude
+
+# Create basic settings file
+cat > .claude/settings.json << 'EOF'
+{
+  "output": {
+    "style": "structured",
+    "format": "markdown",
+    "code_blocks": true,
+    "syntax_highlighting": true
+  },
+  "statusline": {
+    "enabled": true,
+    "show_model": true,
+    "show_cost": true,
+    "show_usage": true,
+    "position": "bottom"
+  }
+}
+EOF
 ```
 
 2. **Test different output styles**
-```
-"Experiment with different output formats and see how they affect the display"
+```bash
+# Test with a simple request
+echo "Analyze this Python function and suggest improvements" > test_request.txt
+
+# Try different configurations by modifying settings.json
+# and observing the output differences
 ```
 
 3. **Configure statusline**
-```
-"Enable and configure the statusline to show relevant information"
+```bash
+# Enable statusline with custom indicators
+cat > .claude/settings.json << 'EOF'
+{
+  "statusline": {
+    "enabled": true,
+    "refresh_rate": 1000,
+    "show": ["model", "cost", "usage", "task_progress"],
+    "custom_indicators": {
+      "coding": "💻",
+      "debugging": "🐛",
+      "testing": "🧪"
+    }
+  }
+}
+EOF
 ```
 
 ### Exercise 2: Custom Output Formats
-**Objective**: Create custom output formats for recipe-specific data.
+**Objective**: Create custom output formats for specific development tasks.
 
 **Tasks**:
-1. **Recipe analysis output**
-```
-"Create a custom output format for recipe analysis that shows nutrition information in a readable format"
+1. **Code review output format**
+```json
+{
+  "output": {
+    "style": "structured",
+    "sections": {
+      "code_review": {
+        "show_diffs": true,
+        "show_line_numbers": true,
+        "highlight_changes": true,
+        "format": "side_by_side"
+      }
+    }
+  }
+}
 ```
 
-2. **Validation results formatting**
-```
-"Design an output format for validation results that clearly shows errors, warnings, and suggestions"
+2. **Test results formatting**
+```json
+{
+  "output": {
+    "style": "structured",
+    "sections": {
+      "test_results": {
+        "show_pass_fail": true,
+        "show_coverage": true,
+        "show_execution_time": true,
+        "format": "table"
+      }
+    }
+  }
+}
 ```
 
-3. **Ingredient list formatting**
-```
-"Create a formatted output for ingredient lists with unit conversions and allergen warnings"
+3. **API documentation format**
+```json
+{
+  "output": {
+    "style": "structured",
+    "sections": {
+      "api_docs": {
+        "show_method": true,
+        "show_endpoint": true,
+        "show_parameters": true,
+        "show_response_format": true,
+        "include_examples": true
+      }
+    }
+  }
+}
 ```
 
 ### Exercise 3: Statusline Customization
-**Objective**: Customize the statusline for recipe development workflow.
+**Objective**: Customize the statusline for your specific development workflow.
 
 **Tasks**:
-1. **Custom indicators**
-```
-"Add custom status indicators for recipe-specific tasks like ingredient validation, nutrition calculation, etc."
+1. **Development-focused statusline**
+```json
+{
+  "statusline": {
+    "enabled": true,
+    "refresh_rate": 500,
+    "show": ["model", "cost", "usage", "current_task", "file_count"],
+    "custom_indicators": {
+      "backend_dev": "⚙️",
+      "frontend_dev": "🎨",
+      "database_work": "🗄️",
+      "api_work": "🔌",
+      "testing": "🧪",
+      "deployment": "🚀"
+    }
+  }
+}
 ```
 
-2. **Progress tracking**
-```
-"Configure the statusline to track progress through recipe development stages"
+2. **Team collaboration statusline**
+```json
+{
+  "statusline": {
+    "enabled": true,
+    "refresh_rate": 1000,
+    "show": ["model", "cost", "usage", "team_tasks", "pull_requests"],
+    "custom_indicators": {
+      "code_review": "👀",
+      "pull_request": "📤",
+      "team_sync": "🤝",
+      "deployment": "🚀",
+      "meeting": "📅"
+    }
+  }
+}
 ```
 
-3. **Error monitoring**
-```
-"Set up statusline error monitoring for common recipe development issues"
+3. **Performance monitoring statusline**
+```json
+{
+  "statusline": {
+    "enabled": true,
+    "refresh_rate": 2000,
+    "show": ["model", "cost", "usage", "performance_metrics", "error_rate"],
+    "custom_indicators": {
+      "optimizing": "⚡",
+      "profiling": "📊",
+      "benchmarking": "⏱️",
+      "memory_analysis": "🧠",
+      "error_investigation": "🔍"
+    }
+  }
+}
 ```
 
 ## Output Format Best Practices
@@ -243,70 +387,206 @@ graph TD
 ```
 
 ### 2. Readability
-- Use appropriate colors and formatting
+- Use appropriate formatting for the content type
 - Structure information hierarchically
 - Highlight important information
 - Use consistent spacing and alignment
 
 ### 3. Performance
 - Balance detail with performance
-- Use progressive disclosure
+- Use appropriate refresh rates for statusline
 - Cache expensive formatting operations
 - Optimize for common use cases
 
 ### 4. Integration
 - Design for tool integration
-- Support machine-readable output
+- Support machine-readable output when needed
 - Provide API access to formatted data
 - Enable export capabilities
 
 ## Advanced Output Techniques
 
-### 1. Conditional Formatting
-```mermaid
-graph LR
-    A[Conditional Formatting] --> B[Data Analysis]
-    A --> C[Rule Engine]
-    A --> D[Template System]
-    
-    B --> B1[Value Assessment]
-    B --> B2[Pattern Recognition]
-    B --> B3[Context Understanding]
-    
-    C --> C1[Format Rules]
-    C --> C2[Style Rules]
-    C --> C3[Content Rules]
-    
-    D --> D1[Template Selection]
-    D --> D2[Data Injection]
-    D --> D3[Output Generation]
+### 1. Context-Aware Formatting
+```json
+{
+  "output": {
+    "style": "adaptive",
+    "context_aware": {
+      "file_type": {
+        "python": {
+          "show_type_hints": true,
+          "show_docstrings": true,
+          "format": "python_specific"
+        },
+        "javascript": {
+          "show_types": true,
+          "show_jsdoc": true,
+          "format": "js_specific"
+        }
+      },
+      "task_type": {
+        "debugging": {
+          "show_stack_trace": true,
+          "show_error_context": true,
+          "highlight_errors": true
+        },
+        "code_review": {
+          "show_diffs": true,
+          "show_metrics": true,
+          "format": "review_specific"
+        }
+      }
+    }
+  }
+}
 ```
 
-### 2. Dynamic Output
-- Adapt output based on context
-- Change detail level based on user needs
-- Provide interactive elements
-- Support real-time updates
+### 2. Dynamic Output Adjustment
+```json
+{
+  "output": {
+    "style": "dynamic",
+    "adaptive": {
+      "screen_size": {
+        "small": "compact",
+        "medium": "structured",
+        "large": "detailed"
+      },
+      "complexity": {
+        "simple": "minimal",
+        "moderate": "standard",
+        "complex": "detailed"
+      }
+    }
+  }
+}
+```
 
-### 3. Export Capabilities
-- Multiple export formats (JSON, CSV, PDF)
-- Customizable export templates
-- Batch export functionality
-- Integration with external tools
+### 3. Multi-Format Output
+```json
+{
+  "output": {
+    "style": "multi_format",
+    "formats": {
+      "primary": "structured",
+      "secondary": "json",
+      "export_formats": ["markdown", "html", "pdf"]
+    },
+    "selection_criteria": {
+      "interactive": "structured",
+      "api": "json",
+      "documentation": "markdown",
+      "report": "pdf"
+    }
+  }
+}
+```
 
 ## Troubleshooting Common Issues
 
 ### 1. Configuration Not Applied
 **Solution**: Check configuration file locations and syntax
+```bash
+# Verify configuration file exists
+ls -la ~/.claude/settings.json
+ls -la .claude/settings.json
 
-### 2. Performance Issues
-**Solution**: Optimize formatting rules and reduce complexity
+# Validate JSON syntax
+cat .claude/settings.json | python -m json.tool
+```
 
-### 3. Inconsistent Output
-**Solution**: Standardize configuration across environments
-
-### 4. Statusline Not Working
+### 2. Statusline Not Working
 **Solution**: Check terminal compatibility and settings
+```bash
+# Verify terminal supports statusline
+echo $TERM
+
+# Check if statusline is enabled
+cat .claude/settings.json | grep -A 10 "statusline"
+```
+
+### 3. Output Format Inconsistencies
+**Solution**: Standardize configuration across environments
+```bash
+# Copy configuration to global location
+cp .claude/settings.json ~/.claude/settings.json
+
+# Verify configuration is loaded
+claude-code --version
+```
+
+### 4. Performance Issues
+**Solution**: Optimize formatting settings
+```json
+{
+  "output": {
+    "style": "compact",
+    "statusline": {
+      "refresh_rate": 2000,
+      "show": ["model", "cost"]
+    }
+  }
+}
+```
+
+## Integration with Other Tools
+
+### 1. IDE Integration
+```json
+{
+  "output": {
+    "style": "structured",
+    "ide_integration": {
+      "vscode": {
+        "format": "vscode_specific",
+        "show_diagnostics": true,
+        "show_quick_fixes": true
+      },
+      "intellij": {
+        "format": "intellij_specific",
+        "show_inspections": true,
+        "show_intentions": true
+      }
+    }
+  }
+}
+```
+
+### 2. CI/CD Integration
+```json
+{
+  "output": {
+    "style": "structured",
+    "cicd": {
+      "github_actions": {
+        "format": "github_specific",
+        "show_step_status": true,
+        "show_artifacts": true
+      },
+      "jenkins": {
+        "format": "jenkins_specific",
+        "show_build_status": true,
+        "show_test_results": true
+      }
+    }
+  }
+}
+```
+
+### 3. Documentation Generation
+```json
+{
+  "output": {
+    "style": "structured",
+    "documentation": {
+      "auto_generate": true,
+      "formats": ["markdown", "html"],
+      "include_examples": true,
+      "include_api_docs": true
+    }
+  }
+}
+```
 
 ## Next Steps
 

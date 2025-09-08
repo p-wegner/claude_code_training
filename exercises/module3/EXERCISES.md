@@ -1,302 +1,499 @@
-# Module 3: Enhanced Control - Output Formats - Exercises
+# Module 3: Output Formats - Practical Exercises
 
 ## Exercise 1: Basic Output Configuration
 
 ### Objective
-Set up and configure basic output formatting for the recipe project.
+Set up basic output formatting for your development workflow and understand how different configurations affect Claude Code's output.
 
 ### Tasks
 
-**1. Create configuration directory structure**
-```
-"Create the .claude directory and basic settings structure for the recipe project"
-```
+#### Task 1.1: Create Basic Configuration
+Create a `.claude/settings.json` file with basic output formatting configuration.
 
-**Steps:**
-- Create `.claude/` directory in recipe project root
-- Create `settings.json` file
-- Set up basic output configuration
+**Instructions:**
+1. Create the `.claude` directory if it doesn't exist
+2. Create a `settings.json` file with basic output configuration
+3. Include structured output style and basic statusline setup
 
-**Expected structure:**
-```
-recipe-project/
-├── .claude/
-│   └── settings.json
-└── ... (existing files)
-```
-
-**2. Configure basic output settings**
-```
-"Add basic output configuration with structured text format, colors, and timestamps"
-```
-
-**Configuration to implement:**
+**Expected Configuration:**
 ```json
 {
   "output": {
-    "format": "structured",
-    "style": "compact",
-    "colors": true,
-    "timestamps": true
+    "style": "structured",
+    "format": "markdown",
+    "code_blocks": true,
+    "syntax_highlighting": true
+  },
+  "statusline": {
+    "enabled": true,
+    "show_model": true,
+    "show_cost": true,
+    "show_usage": true,
+    "position": "bottom"
   }
 }
 ```
 
-**3. Enable and configure statusline**
-```
-"Enable the statusline with basic indicators for task progress and file operations"
+#### Task 1.2: Test Different Output Styles
+Experiment with different output styles and observe how they affect the display.
+
+**Instructions:**
+1. Modify the `style` setting in your configuration
+2. Test with values: "structured", "compact", "markdown"
+3. Observe the differences in output formatting
+
+**Testing Commands:**
+```bash
+# Create a test file
+echo "def calculate_factorial(n):
+    if n <= 1:
+        return 1
+    return n * calculate_factorial(n - 1)" > test_function.py
+
+# Test different configurations
+echo "Analyze this Python function for potential improvements" > test_request.txt
 ```
 
-**Configuration to implement:**
+#### Task 1.3: Configure Statusline
+Set up and customize the statusline for real-time feedback.
+
+**Instructions:**
+1. Enable the statusline with custom refresh rate
+2. Add custom indicators for different tasks
+3. Test the statusline functionality
+
+**Configuration Example:**
 ```json
 {
   "statusline": {
     "enabled": true,
-    "position": "bottom",
-    "show": ["task", "progress", "files"]
+    "refresh_rate": 1000,
+    "show": ["model", "cost", "usage", "task_progress"],
+    "custom_indicators": {
+      "coding": "💻",
+      "debugging": "🐛",
+      "testing": "🧪"
+    }
   }
 }
 ```
 
-### Testing the Configuration
-1. Start Claude Code in the recipe project
-2. Verify output formatting is applied
-3. Check statusline functionality
-4. Experiment with different settings
+### Success Criteria
+- [ ] Configuration file created successfully
+- [ ] Different output styles tested and understood
+- [ ] Statusline configured and working
+- [ ] Custom indicators display correctly
 
-## Exercise 2: Custom Recipe Output Formats
+---
+
+## Exercise 2: Custom Output Formats
 
 ### Objective
-Create custom output formats specifically for recipe data and analysis.
+Create custom output formats for specific development tasks and understand how to tailor output to different contexts.
 
 ### Tasks
 
-**1. Recipe analysis output format**
-```
-"Create a custom output format for recipe analysis that includes nutrition information, ingredient lists, and validation results"
-```
+#### Task 2.1: Code Review Output Format
+Create a specialized output format for code reviews.
 
-**Requirements:**
-- Show recipe基本信息 (title, category, cooking time)
-- Display nutrition facts in a readable format
-- List ingredients with quantities and units
-- Show validation status and any issues
-- Use color coding for different types of information
+**Instructions:**
+1. Configure output formatting for code review scenarios
+2. Include diff display, line numbers, and syntax highlighting
+3. Test with actual code files
 
-**Example output structure:**
-```
-🍳 Recipe Analysis: Chocolate Chip Cookies
-
-   Basic Info:
-   ┌─────────────────────────────────────┐
-   │ Category: Dessert                   │
-   │ Prep Time: 15 min                   │
-   │ Cook Time: 10 min                   │
-   │ Servings: 24                        │
-   └─────────────────────────────────────┘
-
-   Nutrition Facts (per serving):
-   ┌─────────────────────────────────────┐
-   │ Calories: 78 kcal                   │
-   │ Protein: 0.9g                      │
-   │ Carbs: 11g                         │
-   │ Fat: 3.8g                          │
-   └─────────────────────────────────────┘
-
-   Ingredients:
-   ┌─────────────────────────────────────┐
-   │ • 2.25 cups all-purpose flour      │
-   │ • 1 tsp baking soda                │
-   │ • 1 cup butter                      │
-   │ • 2 cups chocolate chips           │
-   └─────────────────────────────────────┘
-
-   Validation: ✅ All checks passed
+**Configuration:**
+```json
+{
+  "output": {
+    "style": "structured",
+    "sections": {
+      "code_review": {
+        "show_diffs": true,
+        "show_line_numbers": true,
+        "highlight_changes": true,
+        "format": "side_by_side"
+      }
+    }
+  }
+}
 ```
 
-**2. Validation results formatter**
-```
-"Create a formatted output for validation results that clearly categorizes errors, warnings, and suggestions"
+#### Task 2.2: Test Results Formatting
+Create a specialized format for displaying test results.
+
+**Instructions:**
+1. Configure test results output format
+2. Include pass/fail status, coverage, and execution time
+3. Test with actual test files
+
+**Configuration:**
+```json
+{
+  "output": {
+    "style": "structured",
+    "sections": {
+      "test_results": {
+        "show_pass_fail": true,
+        "show_coverage": true,
+        "show_execution_time": true,
+        "format": "table"
+      }
+    }
+  }
+}
 ```
 
-**Requirements:**
-- Separate sections for errors, warnings, and suggestions
-- Color coding for severity levels
-- Clear, actionable messages
-- File and line number references
-- Summary statistics
+#### Task 2.3: API Documentation Format
+Create a format for API documentation generation.
 
-**3. Ingredient analysis output**
-```
-"Design an output format for ingredient analysis that shows unit conversions, allergen warnings, and cost estimates"
+**Instructions:**
+1. Configure API documentation output format
+2. Include method, endpoint, parameters, and response format
+3. Test with API endpoint files
+
+**Configuration:**
+```json
+{
+  "output": {
+    "style": "structured",
+    "sections": {
+      "api_docs": {
+        "show_method": true,
+        "show_endpoint": true,
+        "show_parameters": true,
+        "show_response_format": true,
+        "include_examples": true
+      }
+    }
+  }
+}
 ```
 
-**Requirements:**
-- Display ingredient information in a structured format
-- Show unit conversion options
-- Highlight potential allergens
-- Provide cost estimates when available
-- Group ingredients by category
+### Success Criteria
+- [ ] Code review format created and tested
+- [ ] Test results format working correctly
+- [ ] API documentation format functional
+- [ ] All formats display appropriate information
+
+---
 
 ## Exercise 3: Statusline Customization
 
 ### Objective
-Customize the statusline for recipe development workflow.
+Customize the statusline for specific development workflows and understand how to create effective status indicators.
 
 ### Tasks
 
-**1. Recipe development indicators**
-```
-"Add custom status indicators for recipe-specific tasks and development stages"
-```
+#### Task 3.1: Development-Focused Statusline
+Create a statusline optimized for development work.
 
-**Custom indicators to implement:**
-- 🍳 Recipe creation/editing
-- 🔍 Ingredient analysis
-- 📊 Nutrition calculation
-- ✅ Validation
-- ⚠️ Warnings
-- ❌ Errors
-- 💾 Saving
-- 🚀 Deployment
+**Instructions:**
+1. Configure statusline for development tasks
+2. Include relevant indicators for different development activities
+3. Set appropriate refresh rate
 
-**2. Progress tracking for recipe development**
-```
-"Configure statusline to track progress through recipe development stages"
-```
-
-**Progress stages to track:**
-- Recipe basic info (title, description)
-- Ingredient list completion
-- Instructions writing
-- Nutrition calculation
-- Validation checks
-- Final review
-
-**3. Real-time error monitoring**
-```
-"Set up statusline error monitoring for common recipe development issues"
+**Configuration:**
+```json
+{
+  "statusline": {
+    "enabled": true,
+    "refresh_rate": 500,
+    "show": ["model", "cost", "usage", "current_task", "file_count"],
+    "custom_indicators": {
+      "backend_dev": "⚙️",
+      "frontend_dev": "🎨",
+      "database_work": "🗄️",
+      "api_work": "🔌",
+      "testing": "🧪",
+      "deployment": "🚀"
+    }
+  }
+}
 ```
 
-**Monitoring to implement:**
-- Missing required fields
-- Invalid ingredient quantities
-- Nutrition calculation errors
-- Validation failures
-- Save/commit issues
+#### Task 3.2: Team Collaboration Statusline
+Create a statusline for team collaboration scenarios.
 
-## Exercise 4: Advanced Output Features
+**Instructions:**
+1. Configure statusline for team collaboration
+2. Include indicators for code reviews, pull requests, and team sync
+3. Test with team-related activities
 
-### Objective
-Implement advanced output features for better user experience.
-
-### Tasks
-
-**1. Conditional formatting based on data**
-```
-"Create conditional formatting rules that change output based on recipe data"
-```
-
-**Conditional rules to implement:**
-- Color code based on recipe health score
-- Highlight allergens in red
-- Show warnings for high-calorie recipes
-- Format cooking time indicators (quick vs. long recipes)
-
-**2. Interactive output elements**
-```
-"Add interactive elements to output for better user engagement"
+**Configuration:**
+```json
+{
+  "statusline": {
+    "enabled": true,
+    "refresh_rate": 1000,
+    "show": ["model", "cost", "usage", "team_tasks", "pull_requests"],
+    "custom_indicators": {
+      "code_review": "👀",
+      "pull_request": "📤",
+      "team_sync": "🤝",
+      "deployment": "🚀",
+      "meeting": "📅"
+    }
+  }
+}
 ```
 
-**Interactive features:**
-- Expandable sections
-- Quick actions (fix, validate, export)
-- Progress bars for long operations
-- Toggle details visibility
+#### Task 3.3: Performance Monitoring Statusline
+Create a statusline for performance monitoring.
 
-**3. Export functionality**
+**Instructions:**
+1. Configure statusline for performance monitoring
+2. Include indicators for optimization, profiling, and benchmarking
+3. Set appropriate refresh rate for performance data
+
+**Configuration:**
+```json
+{
+  "statusline": {
+    "enabled": true,
+    "refresh_rate": 2000,
+    "show": ["model", "cost", "usage", "performance_metrics", "error_rate"],
+    "custom_indicators": {
+      "optimizing": "⚡",
+      "profiling": "📊",
+      "benchmarking": "⏱️",
+      "memory_analysis": "🧠",
+      "error_investigation": "🔍"
+    }
+  }
+}
 ```
-"Add export capabilities for formatted output to different formats"
-```
-
-**Export formats to support:**
-- JSON (structured data)
-- Markdown (documentation)
-- PDF (printable format)
-- CSV (spreadsheet compatible)
-
-## Exercise 5: Performance Optimization
-
-### Objective
-Optimize output formatting for performance and user experience.
-
-### Tasks
-
-**1. Lazy loading of complex formatting**
-```
-"Implement lazy loading for complex output formatting to improve performance"
-```
-
-**Optimizations to implement:**
-- Delay expensive formatting operations
-- Cache formatting results
-- Progressive disclosure of information
-- Debounce rapid updates
-
-**2. Responsive output design**
-```
-"Create responsive output that adapts to different terminal sizes and display capabilities"
-```
-
-**Responsive features:**
-- Adaptive layout for different screen sizes
-- Fallback for colorless terminals
-- Simplified output for mobile devices
-- Graceful degradation
-
-**3. Memory usage optimization**
-```
-"Optimize memory usage for output formatting operations"
-```
-
-**Memory optimizations:**
-- Reuse formatting templates
-- Clean up temporary objects
-- Limit history retention
-- Optimize string operations
-
-## Exercise Solutions
-
-After completing the exercises, compare your solutions with the provided solutions in `solutions/module3/`.
 
 ### Success Criteria
-- Configuration files are properly structured
-- Output formats are visually appealing and informative
-- Statusline provides useful real-time feedback
-- Custom formats work correctly with recipe data
-- Performance is acceptable for large datasets
+- [ ] Development statusline configured and working
+- [ ] Team collaboration statusline functional
+- [ ] Performance monitoring statusline operational
+- [ ] All statuslines update at appropriate intervals
+
+---
+
+## Exercise 4: Advanced Output Configuration
+
+### Objective
+Create advanced output configurations with context-aware formatting and dynamic adjustments.
+
+### Tasks
+
+#### Task 4.1: Context-Aware Formatting
+Create output formats that adapt to different file types and contexts.
+
+**Instructions:**
+1. Configure context-aware output formatting
+2. Create specific formats for Python and JavaScript files
+3. Test with different file types
+
+**Configuration:**
+```json
+{
+  "output": {
+    "style": "adaptive",
+    "context_aware": {
+      "file_type": {
+        "python": {
+          "show_type_hints": true,
+          "show_docstrings": true,
+          "format": "python_specific"
+        },
+        "javascript": {
+          "show_types": true,
+          "show_jsdoc": true,
+          "format": "js_specific"
+        }
+      }
+    }
+  }
+}
+```
+
+#### Task 4.2: Dynamic Output Adjustment
+Create output formats that adjust based on complexity and screen size.
+
+**Instructions:**
+1. Configure dynamic output adjustment
+2. Set different formats for different complexity levels
+3. Test with various scenarios
+
+**Configuration:**
+```json
+{
+  "output": {
+    "style": "dynamic",
+    "adaptive": {
+      "complexity": {
+        "simple": "minimal",
+        "moderate": "standard",
+        "complex": "detailed"
+      }
+    }
+  }
+}
+```
+
+#### Task 4.3: Multi-Format Output
+Create configurations that support multiple output formats.
+
+**Instructions:**
+1. Configure multi-format output support
+2. Set primary and secondary formats
+3. Configure export formats
+
+**Configuration:**
+```json
+{
+  "output": {
+    "style": "multi_format",
+    "formats": {
+      "primary": "structured",
+      "secondary": "json",
+      "export_formats": ["markdown", "html", "pdf"]
+    },
+    "selection_criteria": {
+      "interactive": "structured",
+      "api": "json",
+      "documentation": "markdown",
+      "report": "pdf"
+    }
+  }
+}
+```
+
+### Success Criteria
+- [ ] Context-aware formatting working correctly
+- [ ] Dynamic output adjustment functional
+- [ ] Multi-format output configuration complete
+- [ ] All advanced features tested and working
+
+---
+
+## Exercise 5: Integration and Troubleshooting
+
+### Objective
+Integrate output formats with other tools and troubleshoot common configuration issues.
+
+### Tasks
+
+#### Task 5.1: IDE Integration
+Configure output formats for IDE integration.
+
+**Instructions:**
+1. Configure output formatting for VSCode or IntelliJ
+2. Include IDE-specific features
+3. Test with IDE integration
+
+**Configuration:**
+```json
+{
+  "output": {
+    "style": "structured",
+    "ide_integration": {
+      "vscode": {
+        "format": "vscode_specific",
+        "show_diagnostics": true,
+        "show_quick_fixes": true
+      }
+    }
+  }
+}
+```
+
+#### Task 5.2: CI/CD Integration
+Configure output formats for CI/CD pipelines.
+
+**Instructions:**
+1. Configure output formatting for GitHub Actions or Jenkins
+2. Include pipeline-specific features
+3. Test with CI/CD scenarios
+
+**Configuration:**
+```json
+{
+  "output": {
+    "style": "structured",
+    "cicd": {
+      "github_actions": {
+        "format": "github_specific",
+        "show_step_status": true,
+        "show_artifacts": true
+      }
+    }
+  }
+}
+```
+
+#### Task 5.3: Troubleshooting Common Issues
+Create solutions for common output format configuration issues.
+
+**Instructions:**
+1. Identify common configuration problems
+2. Create troubleshooting scripts
+3. Document solutions
+
+**Troubleshooting Commands:**
+```bash
+# Verify configuration file exists
+ls -la ~/.claude/settings.json
+ls -la .claude/settings.json
+
+# Validate JSON syntax
+cat .claude/settings.json | python -m json.tool
+
+# Check terminal compatibility
+echo $TERM
+
+# Verify configuration is loaded
+claude-code --version
+```
+
+### Success Criteria
+- [ ] IDE integration configured and working
+- [ ] CI/CD integration functional
+- [ ] Troubleshooting solutions documented
+- [ ] Common issues resolved
+
+---
+
+## Exercise Solutions and Verification
+
+### Verification Commands
+```bash
+# Check configuration syntax
+cat .claude/settings.json | python -m json.tool
+
+# Test configuration loading
+claude-code --help
+
+# Verify statusline functionality
+echo "Test statusline display" | claude-code
+
+# Test different output formats
+echo "Test output formatting" | claude-code --style structured
+echo "Test output formatting" | claude-code --style compact
+```
 
 ### Common Issues and Solutions
+1. **Configuration Not Applied**
+   - Check file location: `~/.claude/settings.json` or `.claude/settings.json`
+   - Validate JSON syntax
+   - Restart Claude Code after changes
 
-**Issue: Configuration not being applied**
-**Solution**: Check file paths and JSON syntax
+2. **Statusline Not Working**
+   - Verify terminal compatibility
+   - Check if statusline is enabled
+   - Adjust refresh rate if needed
 
-**Issue: Statusline not displaying**
-**Solution**: Verify terminal compatibility and settings
+3. **Output Format Inconsistencies**
+   - Standardize configuration across environments
+   - Clear cache if needed
+   - Verify file permissions
 
-**Issue: Performance problems with complex formatting**
-**Solution**: Implement lazy loading and caching
-
-**Issue: Colors not displaying correctly**
-**Solution**: Check terminal color support and configuration
-
-## Next Steps
-
-After completing these exercises, you should be comfortable with:
-- Configuring Claude Code output formats
-- Creating custom output styles
-- Setting up and customizing statusline
-- Implementing advanced output features
-- Optimizing output performance
-
-Proceed to Module 4 to learn about slash commands and reusable patterns.
+### Next Steps
+After completing these exercises, you should be able to:
+- Configure Claude Code output formats for various scenarios
+- Create custom output formats for specific development tasks
+- Set up and customize statusline for different workflows
+- Troubleshoot common configuration issues
+- Integrate output formats with other development tools

@@ -1,388 +1,705 @@
-# Module 4: Reusable Patterns - Slash Commands
+# Module 4: Claude Code Slash Commands - Practical Workflow Automation
 
 ## Learning Objectives
-- Understand the concept of slash commands in Claude Code
-- Create custom slash commands for common workflows
-- Organize and manage command libraries
-- Implement best practices for command design
-- Know when to use commands vs direct interaction
+- Master Claude Code's slash command system and real-world applications
+- Understand the `$ARGUMENTS` variable and parameter handling
+- Create practical commands for common development workflows
+- Implement advanced patterns like research, automation, and GitHub integration
+- Organize and manage command libraries effectively
+- Integrate commands with hooks and subagents for complete workflows
 
-## Slash Commands Overview
+## What Are Claude Code Slash Commands?
 
-### What are Slash Commands?
-```mermaid
-graph TD
-    A[Slash Commands] --> B[Pre-defined Prompts]
-    A --> C[Reusable Workflows]
-    A --> D[Team Standards]
-    A --> E[Automation Patterns]
-    
-    B --> B1[Common Tasks]
-    B --> B2[Best Practices]
-    B --> B3[Consistent Execution]
-    
-    C --> C1[Multi-step Processes]
-    C --> C2[Standardized Actions]
-    C --> C3[Repeatable Results]
-    
-    D --> D1[Shared Knowledge]
-    D --> D2[Team Alignment]
-    D --> D3[Quality Standards]
-    
-    E --> E1[Efficiency]
-    E --> E2[Reliability]
-    E --> E3[Scalability]
+Slash commands are **reusable, parameterized workflows** that automate common development tasks. They live in `.claude/commands/` and can be executed with `/command-name arguments`.
+
+### Key Characteristics
+- **Parameterized**: Use `$ARGUMENTS` to accept user input
+- **Reusable**: Execute the same workflow multiple times
+- **Shareable**: Commands work across teams and projects
+- **Powerful**: Can use all Claude Code tools and capabilities
+- **Integratable**: Work with hooks, subagents, and external tools
+
+## Built-in Commands
+
+Claude Code includes several built-in commands:
+
+| Command | Purpose | Example Usage |
+|---------|---------|---------------|
+| `/init` | Generate initial CLAUDE.md | `/init` |
+| `/permissions` | Manage tool permissions | `/permissions` |
+| `/clear` | Clear context between tasks | `/clear` |
+| `/agents` | Create and manage subagents | `/agents` |
+| `/help` | Get help with Claude Code | `/help` |
+
+## Command Structure and File Organization
+
+### Directory Structure
+```
+.claude/
+├── commands/
+│   ├── analyze-performance.md
+│   ├── code-review.md
+│   ├── generate-prp.md
+│   ├── fix-github-issue.md
+│   └── prep-parallel.md
+└── settings.json
 ```
 
-### Command Structure
-```mermaid
-graph LR
-    A[Slash Command] --> B[Command Name]
-    A --> C[Parameters]
-    A --> D[Execution Logic]
-    A --> E[Output Format]
-    
-    B --> B1[command-name]
-    B --> B1[Descriptive and clear]
-    
-    C --> C1[Required Params]
-    C --> C2[Optional Params]
-    C --> C3[Default Values]
-    
-    D --> D1[Task Definition]
-    D --> D2[Tool Selection]
-    D --> D3[Error Handling]
-    
-    E --> E1[Structured Output]
-    E --> E2[Progress Feedback]
-    E --> E3[Result Summary]
-```
+### Command File Format
+Commands are simple markdown files with a specific structure:
 
-## Creating Slash Commands
-
-### Command Creation Process
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant C as Claude Code
-    participant CF as Command File
-    participant T as Tools
-    
-    U->>C: /command-name params
-    C->>CF: Load command definition
-    CF-->>C: Command template
-    C->>C: Process parameters
-    C->>T: Execute tools
-    T-->>C: Results
-    C->>C: Format output
-    C-->>U: Structured response
-```
-
-### Command File Structure
-```
-.claude/commands/
-├── recipe-validation.md
-├── nutrition-analysis.md
-├── ingredient-converter.md
-├── code-review.md
-└── deployment-check.md
-```
-
-### Basic Command Template
 ```markdown
-# Command Name: /validate-recipe
+# Command: /your-command-name
 
-## Description
-Validate a recipe for completeness, nutrition facts, and potential issues.
+Brief description of what the command does.
 
 ## Parameters
-- recipe_id: ID of the recipe to validate (optional, uses current context if not provided)
-- strict: Boolean for strict validation mode (default: false)
-- include_suggestions: Boolean to include improvement suggestions (default: true)
+- param1: Description of first parameter (optional)
+- param2: Description of second parameter (optional)
 
-## Execution Steps
-1. Load recipe data from database
-2. Validate required fields
-3. Check nutrition calculations
-4. Identify potential issues
-5. Generate improvement suggestions
-6. Format results for display
+## Steps/Logic
+1. First step to execute
+2. Second step with $ARGUMENTS
+3. Third step using tools
+
+## Expected Output
+What the command should produce or accomplish.
+```
+
+## The $ARGUMENTS Variable
+
+The `$ARGUMENTS` variable is the key to creating powerful, parameterized commands:
+
+### Basic Usage
+```markdown
+# Command: /analyze-file
+
+## File to analyze: $ARGUMENTS
+
+Read the file at $ARGUMENTS and provide a comprehensive analysis...
+```
+
+**Usage:** `/analyze-file src/main.js`
+
+### Multiple Arguments
+```markdown
+# Command: /compare-files
+
+## Files to compare: $ARGUMENTS
+
+Compare the files specified in $ARGUMENTS (space-separated)...
+```
+
+**Usage:** `/compare-files file1.js file2.js file3.js`
+
+### Advanced Argument Processing
+```markdown
+# Command: /deploy-service
+
+## Deployment parameters: $ARGUMENTS
+
+Parse $ARGUMENTS for:
+- Service name
+- Environment (dev/staging/prod)
+- Version tag
+- Additional flags
+```
+
+## Practical Command Examples
+
+### Example 1: Repository Analysis (primer)
+**File: `.claude/commands/primer.md`**
+```markdown
+# Prime Context for Claude Code
+
+Use the command `tree` to get an understanding of the project structure.
+
+Start with reading the CLAUDE.md file if it exists to get an understanding of the project.
+
+Read the README.md file to get an understanding of the project.
+
+Read key files in the src/ or root directory
+
+Explain back to me:
+- Project structure
+- Project purpose and goals  
+- Key files and their purposes
+- Any important dependencies
+- Any important configuration files
+```
+
+**Usage:** `/primer`
+
+### Example 2: Automated Code Review
+**File: `.claude/commands/code-review.md`**
+```markdown
+# Code Review Command
+
+## Target files/pattern: $ARGUMENTS
+
+Perform comprehensive code review on files matching $ARGUMENTS.
+
+## Review Process
+1. Find all files matching the pattern
+2. Read each file and analyze for:
+   - Code style and consistency
+   - Potential bugs and issues
+   - Performance concerns
+   - Security vulnerabilities
+   - Best practices compliance
+
+3. Generate detailed report with:
+   - Overall quality assessment
+   - Specific issues found
+   - Recommended fixes
+   - Priority levels (critical/high/medium/low)
 
 ## Output Format
-Validation results grouped by severity with actionable suggestions.
+Structured report with actionable recommendations.
 ```
 
-## Recipe-Specific Commands
+**Usage:** `/code-review src/**/*.js` or `/code-review specific-file.py`
 
-### 1. Recipe Validation Command
-```mermaid
-graph TD
-    A[validate-recipe] --> B[Load Recipe]
-    B --> C[Check Required Fields]
-    C --> D[Validate Ingredients]
-    D --> E[Calculate Nutrition]
-    E --> F[Identify Issues]
-    F --> G[Generate Suggestions]
-    G --> H[Format Results]
-    
-    B --> B1[Title, Instructions]
-    C --> C1[Non-empty fields]
-    D --> D1[Quantities, Units]
-    E --> E1[Per-serving values]
-    F --> F1[Allergens, Health]
-    G --> G1[Actionable items]
-    H --> H1[Structured output]
+### Example 3: Performance Analysis
+**File: `.claude/commands/analyze-performance.md`**
+```markdown
+# Performance Analysis Command
+
+## Target: $ARGUMENTS
+
+Analyze performance of the specified file, function, or endpoint.
+
+## Analysis Steps
+1. Locate and read the target code
+2. Identify potential performance bottlenecks:
+   - Database queries
+   - Algorithmic complexity
+   - Memory usage patterns
+   - I/O operations
+   - Network calls
+
+3. Suggest optimizations:
+   - Caching strategies
+   - Algorithm improvements
+   - Resource optimization
+   - Query optimization
+
+4. Create benchmark script if applicable
+
+## Output
+Performance report with specific, actionable recommendations.
 ```
 
-### 2. Nutrition Analysis Command
-```mermaid
-graph TD
-    A[analyze-nutrition] --> B[Extract Ingredients]
-    B --> C[Calculate Values]
-    C --> D[Assess Health Score]
-    D --> E[Identify Warnings]
-    E --> F[Generate Report]
-    
-    B --> B1[Parse quantities]
-    C --> C1[Use database]
-    D --> D1[Score algorithm]
-    E --> E1[Threshold checks]
-    F --> F1[Visual format]
+### Example 4: Documentation Generation
+**File: `.claude/commands/generate-docs.md`**
+```markdown
+# Generate Documentation
+
+## Target: $ARGUMENTS
+
+Generate comprehensive documentation for the specified module or component.
+
+## Documentation Process
+1. Analyze the target code structure
+2. Extract:
+   - Function signatures and purposes
+   - Class definitions and relationships
+   - Configuration options
+   - Usage examples
+   - Dependencies and requirements
+
+3. Generate:
+   - API documentation
+   - Usage examples
+   - Configuration guide
+   - Troubleshooting section
+
+4. Format as markdown with proper structure
+
+## Output
+Complete documentation ready for README.md or docs/ folder.
 ```
 
-### 3. Ingredient Converter Command
-```mermaid
-graph TD
-    A[convert-ingredients] --> B[Parse Input]
-    B --> C[Identify Units]
-    C --> D[Apply Conversions]
-    D --> E[Handle Allergens]
-    E --> F[Generate Output]
-    
-    B --> B1[Extract values]
-    C --> C1[Unit recognition]
-    D --> D1[Conversion factors]
-    E --> E1[Allergen detection]
-    F --> F1[Multiple formats]
+### Example 5: GitHub Issue Automation
+**File: `.claude/commands/fix-github-issue.md`**
+```markdown
+# Fix GitHub Issue
+
+## Issue number: $ARGUMENTS
+
+Follow these steps to fix the specified GitHub issue:
+
+1. Use `gh issue view $ARGUMENTS` to get issue details
+2. Understand the problem and requirements
+3. Search codebase for relevant files
+4. Implement necessary changes
+5. Write and run tests
+6. Ensure code quality (linting, type checking)
+7. Create descriptive commit
+8. Push and create PR
+
+Remember to use GitHub CLI (`gh`) for all GitHub operations.
 ```
 
-## Command Organization
+**Usage:** `/fix-github-issue 123`
 
-### Command Categories
-```mermaid
-mindmap
-  root((Slash Commands))
-    App Specific Commands
-      /create-new-recipe
-    Development Commands
-      /code-review
-      /update-readme
-      /run-tests
-      /check-coverage
-      /deploy-check
-    Utility Commands
-      /search-code
-      /find-bugs
-      /optimize-performance
-      /generate-docs
-    Team Commands
-      /team-standards
-      /review-request
-      /merge-check
-      /deploy-approval
+## Advanced Command Patterns
+
+### Pattern 1: Research and Implementation (PRP Generation)
+**File: `.claude/commands/generate-prp.md`**
+```markdown
+# Create PRP
+
+## Feature file: $ARGUMENTS
+
+Generate a complete PRP for general feature implementation with thorough research.
+
+## Research Process
+1. **Codebase Analysis**
+   - Search for similar features/patterns
+   - Identify files to reference
+   - Note existing conventions
+   - Check test patterns
+
+2. **External Research**
+   - Search for similar features online
+   - Library documentation (include URLs)
+   - Implementation examples
+   - Best practices and pitfalls
+
+3. **PRP Generation**
+   - Include documentation URLs
+   - Add real code examples
+   - Note library quirks and gotchas
+   - Reference existing patterns
+
+## Output
+Save as: `PRPs/{feature-name}.md`
+
+Include validation gates and quality checklist.
 ```
 
+### Pattern 2: Parallel Development Setup
+**File: `.claude/commands/prep-parallel.md`**
+```markdown
+# Initialize parallel git worktree directories
+
+## Feature name: $ARGUMENTS
+## Number of worktrees: $ARGUMENTS
+
+## Execute these commands
+- Create directory `trees/`
+- For i in NUMBER_OF_PARALLEL_WORKTREES:
+  - Run `git worktree add -b FEATURE_NAME-i ./trees/FEATURE_NAME-i`
+  - Validate with `cd trees/FEATURE_NAME-i && git ls-files`
+- Run `git worktree list` to verify
+
+## Purpose
+Enable multiple Claude Code instances to work on the same feature in parallel.
+```
+
+**Usage:** `/prep-parallel user-auth 3`
+
+### Pattern 3: Workflow Integration
+**File: `.claude/commands/full-workflow.md`**
+```markdown
+# Complete Development Workflow
+
+## Feature/task: $ARGUMENTS
+
+Execute complete development workflow from planning to deployment.
+
+## Workflow Steps
+1. **Planning Phase**
+   - Analyze requirements
+   - Research existing patterns
+   - Create implementation plan
+
+2. **Implementation Phase**
+   - Write code following patterns
+   - Include comprehensive tests
+   - Update documentation
+
+3. **Validation Phase**
+   - Run all tests
+   - Check code quality
+   - Performance testing if applicable
+
+4. **Deployment Phase**
+   - Prepare for deployment
+   - Create PR with proper description
+   - Ensure CI/CD checks pass
+
+## Integration
+- Use validation-gates subagent for testing
+- Use documentation-manager for docs
+- Follow all project conventions
+```
+
+## Creating Your Own Commands
+
+### Step 1: Plan Your Command
+Before creating a command, consider:
+- **What problem does it solve?**
+- **What parameters does it need?**
+- **What tools will it use?**
+- **What should the output look like?**
+
+### Step 2: Create the Command File
+```bash
+# Create commands directory if needed
+mkdir -p .claude/commands
+
+# Create your command file
+cat > .claude/commands/my-command.md << 'EOF'
+# Command: /my-command
+
+## Description of what this command does
+
+## Parameters: $ARGUMENTS
+
+## Steps to execute
+1. First step
+2. Second step using $ARGUMENTS
+3. Third step
+
+## Expected output
+What this command produces
+EOF
+```
+
+### Step 3: Test Your Command
+```bash
+# Test your command
+claude
+/my-command your-test-arguments
+```
+
+### Step 4: Iterate and Improve
+- Test with different arguments
+- Handle edge cases
+- Add error handling
+- Improve output formatting
+
+## Command Organization Strategies
+
+### By Function
+```
+.claude/commands/
+├── analysis/          # Code analysis commands
+├── development/      # Development workflow commands
+├── deployment/       # Deployment commands
+├── documentation/    # Documentation commands
+└── utilities/        # Utility commands
+```
+
+### By Project Type
+```
+.claude/commands/
+├── frontend/         # Frontend-specific commands
+├── backend/          # Backend-specific commands
+├── devops/           # DevOps and deployment commands
+└── common/           # Shared commands
+```
+
+### By Complexity
+```
+.claude/commands/
+├── simple/           # Single-purpose commands
+├── workflow/         # Multi-step workflows
+└── advanced/         # Complex automation commands
+```
+
+## Integration with Other Claude Code Features
+
+### Commands + Hooks
+Commands can trigger hooks and vice versa:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/suggest-command.sh",
+            "description": "Suggest relevant commands after file writes"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Commands + Subagents
+Commands can delegate to specialized subagents:
+
+```markdown
+# Command: /comprehensive-review
+
+## Target: $ARGUMENTS
+
+1. Use code-reviewer subagent for code analysis
+2. Use security-auditor subagent for security checks
+3. Use documentation-manager subagent for docs updates
+4. Use validation-gates subagent for testing
+```
+
+### Commands + MCP Servers
+Commands can leverage MCP server capabilities:
+
+```markdown
+# Command: /semantic-search
+
+## Query: $ARGUMENTS
+
+1. Use Serena MCP server for semantic code search
+2. Analyze results for relevance
+3. Provide context-aware suggestions
+```
 
 ## Best Practices
 
-### 1. Command Design Principles
-```mermaid
-graph LR
-    A[Good Command Design] --> B[Clear Purpose]
-    A --> C[Consistent Interface]
-    A --> D[Helpful Output]
-    A --> E[Error Handling]
-    
-    B --> B1[Single Responsibility]
-    B --> B2[Descriptive Name]
-    
-    C --> C1[Standard Parameters]
-    C --> C2[Predictable Behavior]
-    
-    D --> D1[Structured Results]
-    D --> D2[Actionable Insights]
-    
-    E --> E1[Graceful Failure]
-    E --> E2[Clear Error Messages]
+### 1. Command Design
+- **Single Responsibility**: Each command should have one clear purpose
+- **Descriptive Names**: Use clear, intuitive command names
+- **Consistent Interface**: Follow similar patterns across commands
+- **Helpful Output**: Provide clear, actionable results
+
+### 2. Parameter Handling
+- **Validate Input**: Check if arguments are valid before processing
+- **Provide Defaults**: Use sensible defaults when arguments are optional
+- **Handle Edge Cases**: Account for missing, invalid, or unexpected arguments
+- **Document Usage**: Include examples of how to use the command
+
+### 3. Error Handling
+- **Graceful Failure**: Handle errors gracefully and provide helpful messages
+- **Recovery Suggestions**: Suggest how to fix common issues
+- **Logging**: Include logging for debugging complex commands
+- **Idempotency**: Design commands to be safe to run multiple times
+
+### 4. Performance
+- **Efficient Operations**: Avoid unnecessary file reads or expensive operations
+- **Caching**: Cache results when appropriate
+- **Progress Feedback**: Provide feedback for long-running operations
+- **Resource Management**: Clean up temporary files and resources
+
+## Advanced Techniques
+
+### 1. Conditional Logic
+```markdown
+# Command: /smart-action
+
+## Target: $ARGUMENTS
+
+If $ARGUMENTS contains "test":
+    Run test suite
+Else if $ARGUMENTS contains "deploy":
+    Run deployment pipeline
+Else if $ARGUMENTS contains "docs":
+    Generate documentation
+Else:
+    Show help and usage examples
 ```
 
-### 2. Parameter Design
-- Use clear, descriptive parameter names
-- Provide sensible defaults
-- Support both required and optional parameters
-- Include parameter validation
-- Document parameter types and constraints
+### 2. File Pattern Matching
+```markdown
+# Command: /batch-process
 
-### 3. Output Formatting
-- Use consistent output structure
-- Include progress indicators for long operations
-- Provide clear success/failure feedback
-- Support different output formats when appropriate
-- Include next steps or follow-up actions
+## Pattern: $ARGUMENTS
 
-### 4. Error Handling
-- Validate inputs before execution
-- Provide helpful error messages
-- Support graceful degradation
-- Include recovery suggestions
-- Log errors for debugging
+1. Find all files matching $ARGUMENTS pattern
+2. For each file:
+   - Apply appropriate processing
+   - Validate results
+   - Log progress
+3. Generate summary report
+```
+
+### 3. Integration with External Tools
+```markdown
+# Command: /security-scan
+
+## Target: $ARGUMENTS
+
+1. Run external security scanner on $ARGUMENTS
+2. Parse scanner output
+3. Generate prioritized remediation plan
+4. Create tickets for critical issues
+```
+
+## Debugging Commands
+
+### Common Issues
+1. **Command not found**: Check file is in `.claude/commands/`
+2. **Arguments not working**: Verify `$ARGUMENTS` usage
+3. **Permission issues**: Ensure Claude has needed tool permissions
+4. **File not found**: Use full paths or check working directory
+
+### Debug Techniques
+- **Test with simple arguments**: Start with basic test cases
+- **Add logging**: Include progress messages in your commands
+- **Use verbose mode**: Run Claude with debug flags
+- **Check file permissions**: Ensure files are readable/writable
+
+## Command Templates
+
+### Template 1: Analysis Command
+```markdown
+# Command: /analyze-[target]
+
+## Target: $ARGUMENTS
+
+## Analysis Steps
+1. Load and examine $ARGUMENTS
+2. Apply domain-specific analysis
+3. Identify issues and opportunities
+4. Generate recommendations
+
+## Output Format
+Structured report with findings and actionable items.
+```
+
+### Template 2: Automation Command
+```markdown
+# Command: /automate-[task]
+
+## Target: $ARGUMENTS
+
+## Automation Steps
+1. Validate input and environment
+2. Execute automated workflow
+3. Handle errors and edge cases
+4. Report results and status
+
+## Integration
+Works with existing tools and processes.
+```
+
+### Template 3: Workflow Command
+```markdown
+# Command: /workflow-[name]
+
+## Parameters: $ARGUMENTS
+
+## Workflow Phases
+1. **Preparation**: Setup and validation
+2. **Execution**: Core workflow steps
+3. **Validation**: Quality checks
+4. **Finalization**: Cleanup and reporting
+
+## Quality Gates
+Must pass all validation checks before completion.
+```
 
 ## Hands-on Exercises
 
-### Exercise 1: Create Basic Commands
-**Objective**: Create fundamental slash commands for recipe management.
+### Exercise 1: Basic Command Creation
+**Objective**: Create your first slash command.
 
 **Tasks**:
-1. **Recipe validation command**
-```
-"Create a /validate-recipe command that checks recipe completeness and generates a report"
-```
+1. **Create a file analyzer command**
+   ```markdown
+   # Command: /analyze-file
+   ## File path: $ARGUMENTS
+   # Read file and provide basic analysis
+   ```
 
-2. **Nutrition analysis command**
-```
-"Create a /analyze-nutrition command that calculates nutrition facts and health scores"
-```
+2. **Test with different file types**
+   ```bash
+   /analyze-file package.json
+   /analyze-file src/main.js
+   /analyze-file README.md
+   ```
 
-3. **Ingredient converter command**
-```
-"Create a /convert-ingredients command that handles unit conversions and allergen detection"
-```
+3. **Add error handling**
+   ```markdown
+   # Check if file exists before analyzing
+   # Handle permission errors gracefully
+   ```
 
-### Exercise 2: Advanced Command Features
-**Objective**: Add advanced features to slash commands.
-
-**Tasks**:
-1. **Parameter validation**
-```
-"Add input validation and error handling to your commands"
-```
-
-2. **Progress tracking**
-```
-"Add progress indicators for long-running operations"
-```
-
-3. **Multiple output formats**
-```
-"Support different output formats (JSON, Markdown, Table) for your commands"
-```
-
-### Exercise 3: Command Integration
-**Objective**: Create integrated command workflows.
+### Exercise 2: Parameterized Command
+**Objective**: Create a command with multiple parameters.
 
 **Tasks**:
-1. **Command chaining**
-```
-"Create commands that can be chained together for complex workflows"
-```
+1. **Create a batch processor**
+   ```markdown
+   # Command: /batch-format
+   ## File pattern: $ARGUMENTS
+   # Format all files matching pattern
+   ```
 
-2. **Shared utilities**
-```
-"Extract common functionality into shared utilities that multiple commands can use"
-```
+2. **Add validation**
+   ```markdown
+   # Validate file pattern is safe
+   # Check formatting tools are available
+   ```
 
-3. **Workflow automation**
-```
-"Create a complete workflow command that orchestrates multiple smaller commands"
-```
+3. **Add progress reporting**
+   ```markdown
+   # Show progress for large batches
+   # Report success/failure summary
+   ```
 
-## Command Implementation Examples
+### Exercise 3: Advanced Workflow Command
+**Objective**: Create a complex multi-step workflow.
 
-### Example 1: Recipe Validation Command
-```markdown
-# Command: /validate-recipe
+**Tasks**:
+1. **Create a feature development workflow**
+   ```markdown
+   # Command: /develop-feature
+   ## Feature name: $ARGUMENTS
+   # Complete feature development workflow
+   ```
 
-## Description
-Validates a recipe for completeness, nutrition accuracy, and potential issues.
+2. **Integrate with subagents**
+   ```markdown
+   # Use validation-gates for testing
+   # Use documentation-manager for docs
+   ```
 
-## Parameters
-- recipe_id: ID of recipe to validate (optional)
-- strict_mode: Enable strict validation (default: false)
-- include_suggestions: Include improvement suggestions (default: true)
+3. **Add quality gates**
+   ```markdown
+   # Must pass tests, linting, and review
+   # Generate deployment checklist
+   ```
 
-## Validation Checks
-- Required fields present
-- Ingredient quantities valid
-- Nutrition calculations correct
-- Allergen warnings
-- Cooking time reasonable
-- Serving sizes appropriate
+### Exercise 4: Integration Command
+**Objective**: Create a command that integrates with external tools.
 
-## Output Format
-Validation results with severity levels and actionable suggestions.
-```
+**Tasks**:
+1. **Create a CI/CD integration**
+   ```markdown
+   # Command: /ci-status
+   ## Branch/PR: $ARGUMENTS
+   # Check CI/CD status and report
+   ```
 
-### Example 2: Code Review Command
-```markdown
-# Command: /code-review
+2. **Add GitHub integration**
+   ```markdown
+   # Use gh CLI for GitHub operations
+   # Create issues/PRs as needed
+   ```
 
-## Description
-Performs automated code review with focus on recipe project best practices.
-
-## Parameters
-- file_pattern: Pattern of files to review (default: src/**/*.js)
-- strictness: Review strictness level (low, medium, high)
-- include_security: Include security checks (default: true)
-
-## Review Areas
-- Code style and consistency
-- Error handling
-- Security vulnerabilities
-- Performance issues
-- Best practices compliance
-
-## Output Format
-Categorized findings with severity levels and specific recommendations.
-```
-
-## Common Command Patterns
-
-### 1. Analysis Pattern
-```mermaid
-graph TD
-    A[Input] --> B[Parse Parameters]
-    B --> C[Load Data]
-    C --> D[Apply Analysis]
-    D --> E[Generate Report]
-    E --> F[Format Output]
-```
-
-### 2. Validation Pattern
-```mermaid
-graph TD
-    A[Input] --> B[Validate Parameters]
-    B --> C[Load Target]
-    C --> D[Apply Rules]
-    D --> E[Collect Issues]
-    E --> F[Generate Report]
-```
-
-### 3. Transformation Pattern
-```mermaid
-graph TD
-    A[Input] --> B[Parse Source]
-    B --> C[Apply Transformations]
-    C --> D[Validate Result]
-    D --> E[Generate Output]
-```
+3. **Add notifications**
+   ```markdown
+   # Send status notifications
+   # Integrate with team communication tools
+   ```
 
 ## Next Steps
 
 After completing this module, you should be able to:
-- Create effective slash commands for common workflows
-- Organize and manage command libraries
-- Implement best practices for command design
-- Integrate commands into development workflows
-- Understand when to use commands vs direct interaction
+- ✅ Create effective slash commands for any workflow
+- ✅ Handle parameters and user input effectively
+- ✅ Integrate commands with hooks and subagents
+- ✅ Build complex automation workflows
+- ✅ Organize and share command libraries
+- ✅ Debug and optimize command performance
 
-In the next module, we'll explore sub-agents and specialized expertise.
+**Pro Tip**: Start with simple, single-purpose commands and gradually build complexity. The most useful commands are often the ones that automate your most frequent manual tasks.
+
+Continue to the next module to learn about subagents and specialized expertise.

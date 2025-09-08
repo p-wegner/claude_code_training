@@ -1,0 +1,421 @@
+{
+  "output": {
+    "style": "structured",
+    "format": "markdown",
+    "sections": {
+      "worktree_overview": {
+        "enabled": true,
+        "show_summary": true,
+        "show_active_count": true,
+        "show_total_count": true,
+        "show_resource_usage": true
+      },
+      "individual_worktrees": {
+        "enabled": true,
+        "max_display": 5,
+        "sort_by": "activity",
+        "show_details": ["name", "branch", "status", "progress", "agent", "resource_usage"],
+        "compact_view": false
+      },
+      "parallel_tasks": {
+        "enabled": true,
+        "show_queue": true,
+        "show_active": true,
+        "show_completed": true,
+        "max_history": 10,
+        "group_by_type": true
+      },
+      "resource_monitoring": {
+        "enabled": true,
+        "show_disk_usage": true,
+        "show_memory_usage": true,
+        "show_cpu_usage": true,
+        "refresh_interval": 2000,
+        "alerts": {
+          "disk_threshold": 80,
+          "memory_threshold": 85,
+          "cpu_threshold": 90,
+          "worktree_count_threshold": 10
+        }
+      },
+      "system_health": {
+        "enabled": true,
+        "show_git_status": true,
+        "show_agent_health": true,
+        "show_performance_metrics": true,
+        "health_check_interval": 5000
+      }
+    }
+  },
+  "statusline": {
+    "enabled": true,
+    "position": "bottom",
+    "refresh_rate": 1500,
+    "multi_worktree": {
+      "enabled": true,
+      "max_display": 5,
+      "show_indicators": true,
+      "compact_mode": false,
+      "sort_by": "activity",
+      "indicators": {
+        "active": "🟢",
+        "idle": "🟡",
+        "busy": "🟠",
+        "completed": "✅",
+        "error": "❌",
+        "warning": "⚠️",
+        "merging": "🔄",
+        "testing": "🧪",
+        "developing": "💻"
+      },
+      "status_colors": {
+        "active": "#4CAF50",
+        "idle": "#FFC107",
+        "busy": "#FF9800",
+        "completed": "#8BC34A",
+        "error": "#F44336",
+        "warning": "#FF5722",
+        "merging": "#2196F3",
+        "testing": "#9C27B0",
+        "developing": "#00BCD4"
+      }
+    },
+    "parallel_tasks": {
+      "enabled": true,
+      "show_progress": true,
+      "show_performance": true,
+      "show_errors": true,
+      "max_concurrent_display": 3,
+      "group_by_type": true,
+      "task_types": {
+        "feature_development": "🚀",
+        "bug_fix": "🐛",
+        "testing": "🧪",
+        "code_review": "👀",
+        "documentation": "📝",
+        "deployment": "🚀",
+        "optimization": "⚡"
+      }
+    },
+    "resource_monitoring": {
+      "enabled": true,
+      "show_real_time": true,
+      "show_historical": false,
+      "alerts": {
+        "enabled": true,
+        "sound": false,
+        "persistent": true,
+        "dismiss_timeout": 10000
+      },
+      "metrics": {
+        "disk_usage": {
+          "enabled": true,
+          "warning_threshold": 80,
+          "critical_threshold": 90,
+          "include_worktrees": true
+        },
+        "memory_usage": {
+          "enabled": true,
+          "warning_threshold": 70,
+          "critical_threshold": 85,
+          "include_agents": true
+        },
+        "cpu_usage": {
+          "enabled": true,
+          "warning_threshold": 80,
+          "critical_threshold": 95,
+          "include_processes": true
+        },
+        "network_usage": {
+          "enabled": false,
+          "warning_threshold": 80,
+          "critical_threshold": 90
+        }
+      }
+    },
+    "system_health": {
+      "enabled": true,
+      "show_overall_status": true,
+      "component_checks": {
+        "git": {
+          "enabled": true,
+          "check_interval": 30000,
+          "critical": true
+        },
+        "agents": {
+          "enabled": true,
+          "check_interval": 10000,
+          "critical": false
+        },
+        "disk_space": {
+          "enabled": true,
+          "check_interval": 60000,
+          "critical": true
+        },
+        "memory": {
+          "enabled": true,
+          "check_interval": 15000,
+          "critical": true
+        }
+      },
+      "health_indicators": {
+        "healthy": "💚",
+        "warning": "💛",
+        "critical": "❤️",
+        "unknown": "⚪"
+      }
+    },
+    "custom_indicators": {
+      "worktree_management": "🌳",
+      "parallel_execution": "⚡",
+      "system_monitoring": "📊",
+      "automation": "🤖",
+      "synchronization": "🔄",
+      "cleanup": "🧹",
+      "backup": "💾",
+      "deployment": "🚀",
+      "optimization": "⚡",
+      "security": "🔒"
+    },
+    "context_aware": {
+      "enabled": true,
+      "adapt_to_worktree_count": true,
+      "adapt_to_resource_usage": true,
+      "adapt_to_task_complexity": true,
+      "dynamic_refresh": {
+        "enabled": true,
+        "min_rate": 1000,
+        "max_rate": 5000,
+        "adaptive_thresholds": {
+          "low_activity": 2000,
+          "medium_activity": 3000,
+          "high_activity": 1500
+        }
+      }
+    },
+    "notifications": {
+      "enabled": true,
+      "types": {
+        "worktree_created": true,
+        "worktree_removed": true,
+        "task_started": true,
+        "task_completed": true,
+        "task_failed": true,
+        "resource_warning": true,
+        "resource_critical": true,
+        "system_error": true
+      },
+      "display": {
+        "duration": 5000,
+        "position": "bottom-right",
+        "max_visible": 3,
+        "queue": true
+      }
+    },
+    "interactive": {
+      "enabled": true,
+      "actions": {
+        "worktree_switch": true,
+        "worktree_create": true,
+        "worktree_remove": true,
+        "task_pause": true,
+        "task_resume": true,
+        "task_cancel": true,
+        "resource_cleanup": true,
+        "system_restart": false
+      },
+      "shortcuts": {
+        "toggle_worktree_view": "Ctrl+W",
+        "toggle_resource_view": "Ctrl+R",
+        "toggle_task_view": "Ctrl+T",
+        "quick_worktree_switch": "Ctrl+Shift+W",
+        "emergency_cleanup": "Ctrl+Shift+C"
+      }
+    },
+    "logging": {
+      "enabled": true,
+      "level": "info",
+      "file": ".claude/logs/statusline.log",
+      "max_size": "10MB",
+      "rotate": 5,
+      "include_metrics": true,
+      "include_events": true,
+      "include_errors": true
+    },
+    "performance": {
+      "cache_enabled": true,
+      "cache_ttl": 30000,
+      "batch_operations": true,
+      "lazy_loading": true,
+      "debounce_events": true,
+      "debounce_delay": 200
+    }
+  },
+  "worktree_specific": {
+    "default_config": {
+      "statusline": {
+        "enabled": true,
+        "custom_indicators": {
+          "feature_dev": "🚀",
+          "testing": "🧪",
+          "debugging": "🐛",
+          "review": "👀",
+          "completed": "✅",
+          "merging": "🔄",
+          "deploying": "🚀",
+          "optimizing": "⚡"
+        },
+        "context_display": {
+          "show_worktree_name": true,
+          "show_branch_name": true,
+          "show_feature_name": true,
+          "show_progress": true,
+          "show_resource_usage": true
+        }
+      }
+    },
+    "feature_development": {
+      "statusline": {
+        "custom_indicators": {
+          "coding": "💻",
+          "testing": "🧪",
+          "debugging": "🐛",
+          "reviewing": "👀",
+          "documenting": "📝"
+        },
+        "progress_tracking": {
+          "enabled": true,
+          "show_subtasks": true,
+          "show_estimated_time": true,
+          "show_actual_time": true
+        }
+      }
+    },
+    "bug_fix": {
+      "statusline": {
+        "custom_indicators": {
+          "investigating": "🔍",
+          "fixing": "🔧",
+          "testing": "🧪",
+          "verifying": "✅",
+          "deploying": "🚀"
+        },
+        "priority_display": {
+          "enabled": true,
+          "show_severity": true,
+          "show_impact": true,
+          "show_deadline": true
+        }
+      }
+    },
+    "testing": {
+      "statusline": {
+        "custom_indicators": {
+          "unit_tests": "🧪",
+          "integration_tests": "🔗",
+          "e2e_tests": "🎯",
+          "performance_tests": "⚡",
+          "security_tests": "🔒"
+        },
+        "test_metrics": {
+          "enabled": true,
+          "show_pass_rate": true,
+          "show_coverage": true,
+          "show_execution_time": true,
+          "show_flaky_tests": true
+        }
+      }
+    },
+    "code_review": {
+      "statusline": {
+        "custom_indicators": {
+          "reviewing": "👀",
+          "commenting": "💬",
+          "approving": "✅",
+          "requesting_changes": "🔄",
+          "merging": "🔀"
+        },
+        "review_metrics": {
+          "enabled": true,
+          "show_files_reviewed": true,
+          "show_comments_count": true,
+          "show_time_spent": true,
+          "show_quality_score": true
+        }
+      }
+    }
+  },
+  "automation": {
+    "worktree_lifecycle": {
+      "auto_setup": true,
+      "auto_cleanup": true,
+      "cleanup_criteria": {
+        "completed_tasks": true,
+        "merged_branches": true,
+        "inactivity_period": "7d",
+        "disk_usage_threshold": 90
+      },
+      "backup": {
+        "enabled": true,
+        "before_removal": true,
+        "before_major_changes": true,
+        "compression": true,
+        "retention_period": "30d"
+      }
+    },
+    "task_management": {
+      "auto_assignment": true,
+      "auto_scaling": true,
+      "load_balancing": true,
+      "failure_recovery": true,
+      "retry_policy": {
+        "max_attempts": 3,
+        "backoff_multiplier": 2,
+        "initial_delay": 1000
+      }
+    },
+    "resource_management": {
+      "auto_cleanup": true,
+      "auto_optimization": true,
+      "threshold_monitoring": true,
+      "predictive_scaling": false,
+      "cleanup_schedule": "0 2 * * *"  # Daily at 2 AM
+    }
+  },
+  "integration": {
+    "git": {
+      "auto_sync": true,
+      "auto_commit": false,
+      "auto_push": false,
+      "conflict_resolution": "manual",
+      "branch_protection": true
+    },
+    "ci_cd": {
+      "integration_enabled": true,
+      "auto_trigger": false,
+      "status_reporting": true,
+      "artifact_management": true
+    },
+    "team_collaboration": {
+      "shared_worktrees": false,
+      "conflict_resolution": "cooperative",
+      "notification_system": true,
+      "progress_sharing": true
+    }
+  },
+  "security": {
+    "worktree_isolation": true,
+    "access_control": true,
+    "audit_logging": true,
+    "secure_cleanup": true,
+    "backup_encryption": false,
+    "permission_validation": true
+  },
+  "experimental": {
+    "ml_optimization": false,
+    "predictive_scaling": false,
+    "auto_healing": false,
+    "cross_repository_worktrees": false,
+    "distributed_execution": false
+  }
+}

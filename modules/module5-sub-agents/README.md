@@ -1,481 +1,666 @@
-# Module 5: Specialized Agents - Sub-agents
+# Module 5: Specialized Sub-agents - Practical Implementation Guide
 
 ## Learning Objectives
-- Understand sub-agent architecture and context isolation
-- Create specialized sub-agents for specific domains
-- Implement context engineering for specialized agents
-- Manage sub-agent lifecycle and communication
-- Evaluate trade-offs of using sub-agents vs other approaches
+- Master Claude Code sub-agent architecture with real-world examples
+- Create specialized sub-agents using YAML frontmatter configuration
+- Implement context isolation and communication patterns
+- Build validation, documentation, and security sub-agents
+- Integrate sub-agents with hooks and slash commands
+- Debug and optimize sub-agent performance
 
-## Sub-Agent Architecture
+## What Are Claude Code Sub-agents?
 
-### What are Sub-agents?
-```mermaid
-graph TD
-    A[Sub-agents] --> B[Specialized Expertise]
-    A --> C[Context Isolation]
-    A --> D[Custom Prompts]
-    A --> E[Independent Processing]
-    
-    B --> B1[Domain Knowledge]
-    B --> B2[Specialized Tools]
-    B --> B3[Best Practices]
-    
-    C --> C1[Separate Context Window]
-    C --> C2[Focused Scope]
-    C --> C3[Reduced Noise]
-    
-    D --> D1[Task-Specific Instructions]
-    D --> D2[Personality Definition]
-    D --> D3[Behavior Guidelines]
-    
-    E --> E1[Parallel Processing]
-    E --> E2[Independent Decision Making]
-    E --> E3[Result Aggregation]
+Sub-agents are **specialized AI assistants** with focused expertise, isolated contexts, and custom tool access. They live in `.claude/agents/` and can be launched with the Task tool.
+
+### Key Characteristics
+- **Specialized Expertise**: Each agent has deep knowledge in a specific domain
+- **Context Isolation**: Agents have separate context windows for focused processing
+- **Custom Tools**: Agents can be configured with specific tool permissions
+- **YAML Configuration**: Simple frontmatter defines agent capabilities
+- **Launchable**: Can be launched programmatically via the Task tool
+
+### Real Sub-agent Examples
+
+From the context-engineering repository, we have two working sub-agents:
+
+1. **Documentation Manager**: Proactively updates documentation when code changes
+2. **Validation Gates**: Comprehensive testing and quality assurance specialist
+
+## Sub-agent Configuration and Structure
+
+### Real Sub-agent File Format
+Sub-agents use YAML frontmatter for configuration:
+
+```yaml
+---
+name: validation-gates
+description: "Testing and validation specialist. Proactively runs tests, validates code changes, ensures quality gates are met, and iterates on fixes until all tests pass. Call this agent after you implement features and need to validate that they were implemented correctly. Be very specific with the features that were implemented and a general idea of what needs to be tested."
+tools: Bash, Read, Edit, MultiEdit, Grep, Glob, TodoWrite
+---
 ```
 
-### Sub-Agent vs Main Agent Comparison
-```mermaid
-graph LR
-    subgraph "Main Agent"
-        A[General Purpose]
-        B[Broad Knowledge]
-        C[Context Shared]
-    end
-    
-    subgraph "Sub-agents"
-        E[Specialized]
-        F[Deep Expertise]
-        G[Context Isolated]
-    end
-    
-    A -->|Can handle anything| E
-    B -->|Surface level| F
-    C -->|Shared context| G
+### Configuration Breakdown
+
+**YAML Frontmatter Fields:**
+- `name`: Unique identifier for the agent (used for launching)
+- `description`: Clear purpose and usage guidelines
+- `tools`: Comma-separated list of available tools
+
+**Available Tools:**
+- `Bash`: Execute shell commands
+- `Read`: Read file contents
+- `Write`: Create new files
+- `Edit`: Modify existing files
+- `MultiEdit`: Make multiple edits to one file
+- `Grep`: Search code with ripgrep
+- `Glob`: Find files by pattern
+- `TodoWrite`: Manage task lists
+- `Task`: Launch other sub-agents
+- `WebFetch`: Fetch web content
+- `WebSearch`: Search the web
+
+### Directory Structure
+```
+.claude/
+├── agents/
+│   ├── validation-gates.md
+│   ├── documentation-manager.md
+│   ├── security-auditor.md
+│   └── code-reviewer.md
+├── commands/
+├── hooks/
+└── settings.json
 ```
 
-### Sub-Agent Communication Flow
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant MA as Main Agent
-    participant SA1 as Nutrition Agent
-    participant SA2 as Security Agent
-    participant SA3 as Validation Agent
-    
-    U->>MA: "Analyze this recipe for health and security"
-    MA->>SA1: Analyze nutritional content
-    MA->>SA2: Check for security vulnerabilities
-    MA->>SA3: Validate recipe structure
-    
-    SA1-->>MA: Nutrition report
-    SA2-->>MA: Security assessment
-    SA3-->>MA: Validation results
-    
-    MA->>MA: Aggregate results
-    MA-->>U: Comprehensive analysis
+## Real Sub-agent Examples
+
+### 1. Validation Gates Agent (Complete Example)
+
+**File: `.claude/agents/validation-gates.md`**
+```yaml
+---
+name: validation-gates
+description: "Testing and validation specialist. Proactively runs tests, validates code changes, ensures quality gates are met, and iterates on fixes until all tests pass. Call this agent after you implement features and need to validate that they were implemented correctly. Be very specific with the features that were implemented and a general idea of what needs to be tested."
+tools: Bash, Read, Edit, MultiEdit, Grep, Glob, TodoWrite
+---
 ```
 
-## Creating Specialized Sub-agents
+**Agent Capabilities:**
+- Run automated testing (unit, integration, e2e)
+- Execute linting and formatting checks
+- Perform type checking and security scanning
+- Validate build processes
+- Iterate on fixes until all tests pass
+- Maintain quality gates and standards
 
-### Sub-Agent Creation Process
-```mermaid
-graph TD
-    A[Define Purpose] --> B[Create Agent File]
-    B --> C[Write System Prompt]
-    C --> D[Configure Tools]
-    D --> E[Test Agent]
-    E --> F[Refine Prompt]
-    F --> G[Deploy Agent]
-    
-    A --> A1[Domain Scope]
-    A --> A2[Specific Tasks]
-    A --> A3[Success Criteria]
-    
-    B --> B1[.claude/agents]
-    B --> B2[Agent-name.md]
-    B --> B3[Metadata]
-    
-    C --> C1[Role Definition]
-    C --> C2[Expertise Scope]
-    C --> C3[Behavior Guidelines]
-    
-    D --> D1[Tool Access]
-    D --> D2[Permissions]
-    D --> D3[Constraints]
+**Usage Pattern:**
+```bash
+# Launch after implementing features
+Task(
+    description="Validate new authentication system",
+    prompt="I just implemented a JWT-based authentication system with login, logout, and token refresh endpoints. Please run comprehensive tests and validate that everything works correctly.",
+    subagent_type="validation-gates"
+)
 ```
 
-### Recipe Project Sub-agents
+### 2. Documentation Manager Agent (Complete Example)
 
-#### 1. Nutrition Analysis Agent
-```mermaid
-graph TD
-    A[Nutrition Agent] --> B[Core Capabilities]
-    A --> C[Knowledge Base]
-    A --> D[Analysis Methods]
-    
-    B --> B1[Calorie Calculation]
-    B --> B2[Macro Analysis]
-    B --> B3[Health Scoring]
-    
-    C --> C1[Nutrition Database]
-    C --> C2[Dietary Guidelines]
-    C --> C3[Allergen Information]
-    
-    D --> D1[Recipe Parsing]
-    D --> D2[Ingredient Analysis]
-    D --> D3[Per-serving Calculations]
+**File: `.claude/agents/documentation-manager.md`**
+```yaml
+---
+name: documentation-manager
+description: "Expert documentation specialist. Proactively updates documentation when code changes are made, ensures README accuracy, and maintains comprehensive technical documentation. Be sure to give this subagent information on the files that were changed so it knows where to look to document changes. Always call this agent after there are code changes."
+tools: Read, Write, Edit, MultiEdit, Grep, Glob, ls
+---
 ```
 
-#### 2. Security Audit Agent
-```mermaid
-graph TD
-    A[Security Agent] --> B[Vulnerability Detection]
-    A --> C[Code Analysis]
-    A --> D[Risk Assessment]
-    
-    B --> B1[SQL Injection]
-    B --> B2[XSS Detection]
-    B --> B3[Input Validation]
-    
-    C --> C1[Static Analysis]
-    C --> C2[Pattern Matching]
-    C --> C3[Best Practice Checks]
-    
-    D --> D1[Severity Scoring]
-    D --> D2[Impact Analysis]
-    D --> D3[Remediation Suggestions]
+**Agent Capabilities:**
+- Update README.md when features change
+- Create API documentation
+- Maintain architecture diagrams
+- Generate usage examples
+- Ensure documentation consistency
+- Validate code comments match external docs
+
+**Usage Pattern:**
+```bash
+# Launch after code changes
+Task(
+    description="Update documentation for payment system",
+    prompt="I just added a new payment processing module with Stripe integration. The files changed are src/payment/processor.py, src/payment/models.py, and src/payment/routes.py. Please update all relevant documentation.",
+    subagent_type="documentation-manager"
+)
 ```
 
-#### 3. Recipe Validation Agent
-```mermaid
-graph TD
-    A[Validation Agent] --> B[Structure Checks]
-    A --> C[Content Analysis]
-    A --> D[Quality Assessment]
-    
-    B --> B1[Required Fields]
-    B --> B2[Data Types]
-    B --> C3[Relationships]
-    
-    C --> C1[Recipe Completeness]
-    C --> C2[Instruction Clarity]
-    C --> C3[Ingredient Accuracy]
-    
-    D --> D1[Usability Score]
-    D --> D2[Improvement Suggestions]
-    D --> D3[Best Practice Compliance]
-```
+## Creating Custom Sub-agents
 
-## Context Engineering for Sub-agents
+### Step 1: Define Agent Purpose
+Before creating a sub-agent, identify:
+- **Domain expertise needed** (security, documentation, testing, etc.)
+- **Specific tasks** it will perform
+- **Tools required** for those tasks
+- **Success criteria** for the agent
 
-### Context Isolation Benefits
-```mermaid
-graph LR
-    A[Context Isolation] --> B[Focused Expertise]
-    A --> C[Reduced Noise]
-    A --> D[Better Performance]
-    A --> E[Clearer Responsibility]
-    
-    B --> B1[Domain-Specific Knowledge]
-    B --> B2[Specialized Processing]
-    
-    C --> C1[Relevant Information Only]
-    C --> C2[Improved Accuracy]
-    
-    D --> D1[Faster Processing]
-    D --> D2[Lower Resource Usage]
-    
-    E --> E1[Single Responsibility]
-    E --> E2[Clear Success Metrics]
-```
+### Step 2: Create Agent File
+Create the agent file in `.claude/agents/` with proper YAML frontmatter:
 
-### Context Management Strategies
-```mermaid
-graph TD
-    A[Context Management] --> B[Input Filtering]
-    A --> C[Information Hierarchies]
-    A --> D[Context Pruning]
-    A --> E[Relevance Scoring]
-    
-    B --> B1[Domain Relevance]
-    B --> B2[Task Specificity]
-    B --> B3[Data Validation]
-    
-    C --> C1[Priority Levels]
-    C --> C2[Dependencies]
-    C --> C3[Relationships]
-    
-    D --> D1[Redundancy Removal]
-    D --> D2[Outdated Information]
-    D --> D3[Irrelevant Data]
-    
-    E --> E1[Importance Scoring]
-    E --> E2[Freshness Factors]
-    E --> E3[Usage Patterns]
-```
+**Example: Security Auditor Agent**
+```yaml
+---
+name: security-auditor
+description: "Security specialist that analyzes code for vulnerabilities, performs security audits, and provides remediation guidance. Focus on defensive security only - no malicious code creation."
+tools: Read, Edit, MultiEdit, Grep, Glob, Bash, WebSearch
+---
 
-## Sub-Agent Implementation
+You are a security specialist focused on defensive security analysis and vulnerability detection. Your expertise includes:
 
-### Agent File Structure
-```
-.claude/agents/
-├── nutrition-analyst.md
-├── security-auditor.md
-├── recipe-validator.md
-├── ingredient-expert.md
-└── export-specialist.md
-```
+## Security Expertise
+- OWASP Top 10 vulnerabilities
+- Common security misconfigurations
+- Input validation and sanitization
+- Authentication and authorization best practices
+- Secure coding guidelines
+- Security testing methodologies
 
-### Example: Nutrition Analyst Agent
-```markdown
-# Agent: Nutrition Analyst
+## Analysis Methods
+- Static code analysis for vulnerability patterns
+- Dependency security scanning
+- Configuration security review
+- Access control validation
+- Data protection assessment
 
-## Role
-You are a specialized nutrition analyst with expertise in recipe nutritional analysis, dietary guidelines, and health impact assessment.
+## Security Focus Areas
+- SQL injection prevention
+- XSS and CSRF protection
+- Authentication bypass detection
+- Privilege escalation vulnerabilities
+- Data exposure and leakage
+- Insecure direct object references
 
-## Expertise
-- Nutritional science and dietetics
-- Recipe analysis and calorie calculation
-- Dietary restrictions and allergen identification
-- Health impact assessment
-- Nutritional database management
-
-## Responsibilities
-- Analyze recipe nutritional content
-- Calculate per-serving nutrition facts
-- Identify potential health concerns
-- Suggest nutritional improvements
-- Provide dietary compliance information
-
-## Tools Available
-- Recipe database access
-- Nutritional information database
-- Unit conversion utilities
-- Calculation tools
-- Report generation
+## Reporting Standards
+- Provide clear severity ratings (Critical/High/Medium/Low)
+- Include specific code locations for issues
+- Suggest concrete remediation steps
+- Reference relevant security standards (OWASP, NIST)
+- Prioritize fixes based on risk assessment
 
 ## Guidelines
-- Focus on accuracy in calculations
-- Consider different dietary needs
-- Provide actionable recommendations
-- Flag potential allergens and health concerns
-- Use evidence-based nutritional standards
-
-## Output Format
-Structured nutritional analysis with:
-- Per-serving nutrition facts
-- Health impact assessment
-- Dietary compliance information
-- Improvement suggestions
-- Allergen warnings
+- Focus on defensive security only
+- Never create or improve malicious code
+- Provide actionable, specific recommendations
+- Consider both technical and procedural security
+- Document all findings with evidence
 ```
 
-## Sub-Agent Coordination
+### Step 3: Test the Agent
+Launch your agent with specific test scenarios:
 
-### Agent Orchestration
-```mermaid
-graph TD
-    A[Main Agent] --> B[Task Analysis]
-    B --> C[Agent Selection]
-    C --> D[Parallel Execution]
-    D --> E[Result Aggregation]
-    E --> F[Final Output]
-    
-    C --> C1[Nutrition Agent]
-    C --> C2[Security Agent]
-    C --> C3[Validation Agent]
-    
-    D --> D1[Independent Processing]
-    D --> D2[Context Isolation]
-    D --> D3[Specialized Analysis]
-    
-    E --> E1[Conflict Resolution]
-    E --> E2[Result Integration]
-    E --> E3[Quality Assessment]
+```bash
+# Test security agent
+Task(
+    description="Audit authentication system",
+    prompt="Please analyze the authentication system in src/auth/ for security vulnerabilities. Focus on password handling, session management, and access controls.",
+    subagent_type="security-auditor"
+)
 ```
 
-### Communication Patterns
-```mermaid
-sequenceDiagram
-    participant MA as Main Agent
-    participant NA as Nutrition Agent
-    participant SA as Security Agent
-    participant VA as Validation Agent
-    
-    MA->>NA: Analyze nutrition for recipe X
-    MA->>SA: Check security vulnerabilities
-    MA->>VA: Validate recipe structure
-    
-    par
-        NA-->>MA: Nutrition report
-    and
-        SA-->>MA: Security findings
-    and
-        VA-->>MA: Validation results
-    end
-    
-    MA->>MA: Resolve conflicts
-    MA->>MA: Generate comprehensive report
+### Step 4: Refine Based on Results
+Monitor the agent's performance and refine:
+- Adjust tool permissions if needed
+- Update system prompt for better results
+- Add more specific guidelines
+- Include examples of expected output
+
+## Launching Sub-agents Programmatically
+
+### Using the Task Tool
+Sub-agents are launched using the Task tool with specific parameters:
+
+```python
+Task(
+    description="Brief description of the task",
+    prompt="Detailed instructions for the agent",
+    subagent_type="agent-name-from-yaml"
+)
 ```
 
-## Hands-on Exercises
+### Parameter Breakdown
 
-### Exercise 1: Create Nutrition Analysis Agent
-**Objective**: Build a specialized agent for nutritional analysis.
+**description** (required):
+- Short, clear task description (3-5 words)
+- Used for logging and tracking
+- Example: "Validate user authentication system"
 
-**Tasks**:
-1. **Define agent scope**
-```
-"Create a nutrition analysis agent that can calculate calories, macros, and health scores for recipes"
-```
+**prompt** (required):
+- Detailed instructions for the agent
+- Include context about what was implemented
+- Specify what needs to be tested/analyzed
+- Example: "I just implemented JWT-based authentication with login endpoints. Please test all authentication flows and validate security measures."
 
-2. **Implement core functionality**
-```
-"Implement nutritional calculation logic using the ingredient database and conversion utilities"
-```
+**subagent_type** (required):
+- Must match the `name` field from the agent's YAML frontmatter
+- Example: "validation-gates"
 
-3. **Test agent accuracy**
-```
-"Test the agent with known recipes and verify the accuracy of nutritional calculations"
-```
+### Real Usage Examples
 
-### Exercise 2: Security Audit Agent
-**Objective**: Create a security-focused sub-agent.
-
-**Tasks**:
-1. **Security expertise definition**
-```
-"Define the security knowledge base and vulnerability detection capabilities"
-```
-
-2. **Code analysis implementation**
-```
-"Implement static code analysis for common security vulnerabilities in the recipe project"
+#### After Code Implementation
+```python
+# After implementing a new feature
+Task(
+    description="Validate payment processing system",
+    prompt="I just implemented a Stripe payment processing system with webhook handling, payment intent creation, and refund processing. The files changed are src/payment/processor.py, src/payment/models.py, and src/payment/routes.py. Please run comprehensive tests and validate all functionality.",
+    subagent_type="validation-gates"
+)
 ```
 
-3. **Risk assessment system**
-```
-"Create a risk scoring system for security findings with remediation suggestions"
-```
-
-### Exercise 3: Multi-Agent Coordination
-**Objective**: Coordinate multiple sub-agents for complex analysis.
-
-**Tasks**:
-1. **Agent communication**
-```
-"Set up communication protocols between nutrition, security, and validation agents"
+#### After Documentation Updates
+```python
+# After adding new API endpoints
+Task(
+    description="Update API documentation",
+    prompt="I just added new REST API endpoints for user management including GET /users, POST /users, PUT /users/{id}, and DELETE /users/{id}. Please update the API documentation and README with the new endpoints.",
+    subagent_type="documentation-manager"
+)
 ```
 
-2. **Result integration**
-```
-"Implement result aggregation and conflict resolution between different agent findings"
-```
-
-3. **Workflow orchestration**
-```
-"Create a main agent that can orchestrate multiple sub-agents for comprehensive recipe analysis"
-```
-
-## Trade-offs and Considerations
-
-### Benefits of Sub-agents
-```mermaid
-graph TD
-    A[Benefits] --> B[Deep Expertise]
-    A --> C[Improved Performance]
-    A --> D[Better Organization]
-    A --> E[Scalability]
-    
-    B --> B1[Domain-Specific Knowledge]
-    B --> B2[Specialized Processing]
-    
-    C --> C1[Faster Processing]
-    C --> C2[Lower Resource Usage]
-    
-    D --> D1[Clear Responsibility]
-    D --> D2[Maintainable Code]
-    
-    E --> E1[Easy to Add New Agents]
-    E --> E2[Parallel Processing]
+#### Security Audit Request
+```python
+# After major code changes
+Task(
+    description="Security audit of authentication system",
+    prompt="Please conduct a comprehensive security audit of our authentication system focusing on password handling, session management, JWT token security, and access control vulnerabilities.",
+    subagent_type="security-auditor"
+)
 ```
 
-### Challenges and Limitations
-```mermaid
-graph TD
-    A[Challenges] --> B[Complexity Overhead]
-    A --> C[Communication Issues]
-    A --> D[Context Synchronization]
-    A --> E[Debugging Difficulty]
-    
-    B --> B1[Agent Management]
-    B --> B2[Coordination Logic]
-    
-    C --> C1[Result Integration]
-    C --> C2[Conflict Resolution]
-    
-    D --> D1[Information Sharing]
-    D --> D2[Consistency Maintenance]
-    
-    E --> E1[Multiple Contexts]
-    E --> E2[Distributed Processing]
+## Advanced Sub-agent Patterns
+
+### 1. Agent Chaining and Orchestration
+Create workflows where agents call other agents:
+
+```python
+# Main agent orchestrates multiple specialists
+Task(
+    description="Complete feature development workflow",
+    prompt="Please orchestrate a complete development workflow for the new user analytics feature:
+1. First, use the validation-gates agent to test the implementation
+2. Then, use the security-auditor agent to review for vulnerabilities
+3. Finally, use the documentation-manager agent to update all documentation
+4. Report back with a comprehensive summary of all findings",
+    subagent_type="development-orchestrator"
+)
 ```
 
-### When to Use Sub-agents
-```mermaid
-graph TD
-    A[Use Sub-agents When] --> B[Complex Domains]
-    A --> C[Performance Critical]
-    A --> D[Multiple Expertise Areas]
-    A --> E[Reusable Workflows]
-    
-    B --> B1[Deep Knowledge Required]
-    B --> B2[Specialized Processing]
-    
-    C --> C1[Large Datasets]
-    C --> C2[Complex Calculations]
-    
-    D --> D1[Different Expertise]
-    D --> D2[Independent Analysis]
-    
-    E --> E1[Repeated Tasks]
-    E --> E2[Standardized Processes]
+### 2. Context Sharing Between Agents
+Agents can share context by passing information:
+
+```python
+# Agent A generates report, Agent B uses it
+Task(
+    description="Security review and documentation update",
+    prompt="I've completed a security audit that found 3 medium-severity issues in the authentication system. The detailed findings are: [paste security report here]. Please use this information to update the security documentation and create a remediation guide.",
+    subagent_type="documentation-manager"
+)
 ```
 
-## Best Practices
+### 3. Specialized Tool Configurations
+Different agents need different tool combinations:
 
-### 1. Agent Design
-- Keep agents focused on specific domains
-- Define clear boundaries and responsibilities
-- Provide comprehensive system prompts
-- Include proper error handling
+```yaml
+# Documentation agent (read-only focus)
+---
+name: documentation-reviewer
+description: "Reviews documentation for accuracy and completeness"
+tools: Read, Grep, Glob, ls
+---
 
-### 2. Context Management
-- Isolate relevant information
-- Use efficient data structures
-- Implement context pruning
-- Monitor context window usage
+# Full-stack development agent
+---
+name: full-stack-developer
+description: "Handles both frontend and backend development"
+tools: Read, Write, Edit, MultiEdit, Grep, Glob, Bash, TodoWrite, Task
+---
 
-### 3. Communication
-- Standardize message formats
-- Implement proper error handling
-- Use asynchronous processing
-- Provide progress feedback
+# Research agent (web-focused)
+---
+name: technical-researcher
+description: "Researches best practices and solutions"
+tools: WebSearch, WebFetch, Read, Write, Edit
+---
+```
 
-### 4. Testing and Validation
-- Test agents independently
-- Validate communication protocols
-- Monitor performance metrics
-- Establish success criteria
+### 4. Error Handling and Recovery
+Build agents that can handle failures gracefully:
+
+```yaml
+---
+name: resilient-processor
+description: "Processes tasks with error recovery and retry logic"
+tools: Bash, Read, Edit, TodoWrite
+---
+
+You are a resilient task processor that can handle failures gracefully.
+
+## Error Handling Approach
+- When tests fail, analyze the error and attempt fixes
+- If builds fail, check dependencies and configuration
+- When documentation is incomplete, research and fill gaps
+- Use TodoWrite to track issues and resolutions
+- Provide detailed error reports with suggested solutions
+
+## Recovery Strategies
+- Retry failed operations with different approaches
+- Roll back changes that cause issues
+- Research alternative solutions when blocked
+- Escalate critical issues that cannot be resolved
+```
+
+### 5. Performance Optimization Agents
+Create agents focused on performance:
+
+```yaml
+---
+name: performance-optimizer
+description: "Analyzes and optimizes code performance"
+tools: Read, Edit, MultiEdit, Grep, Glob, Bash, WebSearch
+---
+
+You are a performance optimization specialist.
+
+## Performance Analysis
+- Database query optimization
+- Algorithm efficiency improvements
+- Memory usage optimization
+- API response time reduction
+- Frontend performance tuning
+
+## Optimization Techniques
+- Caching strategies
+- Query optimization
+- Code refactoring
+- Resource usage analysis
+- Load testing guidance
+
+## Reporting
+- Provide before/after performance metrics
+- Suggest specific code changes
+- Recommend monitoring solutions
+- Document optimization trade-offs
+```
+
+## Integration with Other Claude Code Features
+
+### Sub-agents + Hooks
+Agents can be triggered automatically by hooks:
+
+**`.claude/settings.json`**
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/trigger-validation.sh",
+            "description": "Run validation after code changes"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**`.claude/hooks/trigger-validation.sh`**
+```bash
+#!/bin/bash
+# Hook that triggers validation agent
+input=$(cat)
+file_path=$(echo "$input" | jq -r '.tool_input.file_path // empty')
+
+# If Python file was written, trigger validation
+if [[ "$file_path" == *.py ]]; then
+    echo "Triggering validation for $file_path" >&2
+    # This would need to be integrated with your Claude Code workflow
+    # For now, just log that validation should be triggered
+fi
+
+echo "{}"
+```
+
+### Sub-agents + Slash Commands
+Create commands that launch sub-agents:
+
+**`.claude/commands/validate-feature.md`**
+```markdown
+# Command: /validate-feature
+
+## Feature description: $ARGUMENTS
+
+Launch the validation-gates subagent to test and validate the specified feature.
+
+## Process
+1. Parse feature description from $ARGUMENTS
+2. Identify relevant files and test suites
+3. Launch validation-gates subagent
+4. Report results and recommendations
+
+## Usage
+/validate-feature "JWT authentication system"
+/validate-feature "Payment processing with Stripe"
+```
+
+**`.claude/commands/update-docs.md`**
+```markdown
+# Command: /update-docs
+
+## Changed files: $ARGUMENTS
+
+Launch the documentation-manager subagent to update documentation for changed files.
+
+## Process
+1. Parse file list from $ARGUMENTS
+2. Determine what documentation needs updating
+3. Launch documentation-manager subagent
+4. Confirm documentation changes
+
+## Usage
+/update-docs "src/auth.py src/models.py"
+/update-docs "src/payment/"
+```
+
+### Sub-agents + MCP Servers
+Agents can leverage MCP server capabilities:
+
+```yaml
+---
+name: mcp-enhanced-researcher
+description: "Research specialist using MCP servers for enhanced capabilities"
+tools: Task, WebSearch, WebFetch, Read, Write, Edit
+---
+
+You are a research specialist with access to MCP servers for enhanced capabilities.
+
+## MCP Integration
+- Use Serena MCP server for semantic code search
+- Leverage database MCP servers for data analysis
+- Integrate with file system MCP servers for efficient file operations
+
+## Research Process
+1. **Local Analysis**: Use available tools to examine codebase
+2. **MCP Enhancement**: Use MCP servers for deep analysis
+3. **External Research**: Web search for best practices
+4. **Synthesis**: Combine all findings into comprehensive report
+
+## Available MCP Servers
+- **Serena**: Semantic search and code understanding
+- **Database**: Query and analyze data
+- **File System**: Advanced file operations
+- **Web**: Enhanced web search and fetching
+```
+
+### Complete Workflow Integration
+Create comprehensive workflows that combine all features:
+
+```python
+# 1. Slash command triggers the process
+# /develop-feature "user-authentication"
+
+# 2. Command launches main orchestrator agent
+Task(
+    description="Develop user authentication feature",
+    prompt="Please develop a complete user authentication system with JWT tokens, password hashing, and refresh tokens. Follow the complete development workflow:
+    1. Research existing patterns and best practices
+    2. Implement the feature following project standards
+    3. Write comprehensive tests
+    4. Validate security and functionality
+    5. Update all documentation
+    6. Report back with deployment checklist",
+    subagent_type="feature-developer"
+)
+
+# 3. Orchestrator agent uses other agents:
+#    - technical-researcher for best practices
+#    - validation-gates for testing
+#    - security-auditor for security review
+#    - documentation-manager for docs
+
+# 4. Hooks can trigger additional validation as needed
+```
+
+## Best Practices and Patterns
+
+### Agent Design Principles
+
+**1. Single Responsibility**
+- Each agent should have one clear, focused purpose
+- Avoid creating "do-everything" agents
+- Split complex domains into specialized sub-agents
+
+**2. Clear Success Criteria**
+- Define what success looks like for each agent
+- Include measurable outcomes where possible
+- Set quality standards and validation criteria
+
+**3. Appropriate Tool Permissions**
+- Grant only the tools necessary for the agent's job
+- Use read-only tools for review-focused agents
+- Provide write tools for agents that need to modify files
+
+### Tool Permission Matrix
+
+| Agent Type | Read | Write | Bash | Web | Task |
+|------------|------|-------|------|-----|------|
+| Documentation Reviewer | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Documentation Manager | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Code Reviewer | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Security Auditor | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Validation Gates | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Feature Developer | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Researcher | ✅ | ✅ | ❌ | ✅ | ❌ |
+
+### System Prompt Guidelines
+
+**Structure for Effectiveness:**
+1. **Role Definition**: Clear statement of purpose and expertise
+2. **Scope Definition**: What the agent should and shouldn't do
+3. **Process Description**: Step-by-step approach to tasks
+4. **Output Standards**: Expected format and quality level
+5. **Guidelines**: Rules, constraints, and best practices
+
+**Example Effective Prompt Structure:**
+```markdown
+You are a [specialist role] with expertise in [domain areas].
+
+## Core Responsibilities
+- [Primary responsibility 1]
+- [Primary responsibility 2]
+- [Primary responsibility 3]
+
+## Process
+1. [Step 1 with specific actions]
+2. [Step 2 with criteria]
+3. [Step 3 with quality checks]
+
+## Output Standards
+- [Expected output format 1]
+- [Expected output format 2]
+- [Quality criteria]
+
+## Guidelines
+- [Important rule 1]
+- [Important rule 2]
+- [Constraint or limitation]
+```
+
+### Error Handling and Recovery
+
+**Build Resilient Agents:**
+- Include fallback strategies for common failures
+- Provide clear error messages and recovery suggestions
+- Use TodoWrite to track issues and resolutions
+- Implement retry logic for transient failures
+
+**Example Error Handling Pattern:**
+```markdown
+## Error Handling
+When encountering errors:
+1. **Identify the error type** (test failure, build error, permission issue)
+2. **Attempt resolution** (fix code, update config, request permissions)
+3. **Document the issue** and solution for future reference
+4. **Escalate if necessary** for issues that cannot be resolved
+
+## Common Issues and Solutions
+- **Test failures**: Check dependencies, update imports, fix assertions
+- **Build errors**: Verify syntax, check dependencies, update configuration
+- **Permission errors**: Request appropriate permissions, use alternative approaches
+```
+
+### Performance Optimization
+
+**Agent Performance Tips:**
+- Limit context window usage by focusing on relevant information
+- Use efficient search patterns (Grep over Read when possible)
+- Batch operations to minimize tool calls
+- Cache results when appropriate
+
+**Optimization Techniques:**
+```markdown
+## Performance Optimization
+- Use Grep for targeted searches instead of reading entire files
+- Batch multiple edits with MultiEdit instead of individual Edit operations
+- Use Glob patterns to find relevant files efficiently
+- Leverage TodoWrite for tracking progress without losing context
+
+## Memory Management
+- Focus on the most relevant information for the current task
+- Prune unnecessary context to maintain performance
+- Use structured approaches to handle large codebases
+```
 
 ## Next Steps
 
 After completing this module, you should be able to:
-- Design and implement specialized sub-agents
-- Manage context isolation and communication
-- Coordinate multiple agents for complex tasks
-- Evaluate when to use sub-agents vs other approaches
-- Implement best practices for agent development
+- ✅ Create specialized sub-agents with YAML frontmatter configuration
+- ✅ Launch agents programmatically using the Task tool
+- ✅ Design effective system prompts for specific domains
+- ✅ Integrate agents with hooks and slash commands
+- ✅ Build multi-agent workflows for complex tasks
+- ✅ Debug and optimize agent performance
 
-In the next module, we'll explore hooks and automation patterns.
+### Continue Your Journey
+1. **Practice**: Create agents for your specific project needs
+2. **Integrate**: Combine agents with hooks and commands
+3. **Optimize**: Refine agent performance based on usage
+4. **Share**: Contribute agent patterns to your team
+
+## Key Takeaways
+- **Sub-agents provide focused expertise** with isolated contexts
+- **YAML frontmatter defines agent capabilities** and tool access
+- **Task tool launches agents** with specific parameters
+- **Integration with hooks and commands** creates powerful workflows
+- **Performance optimization** requires careful context management
+
+Remember: The best agents are those that solve real problems in your development workflow. Start with specific pain points and build agents to address them.

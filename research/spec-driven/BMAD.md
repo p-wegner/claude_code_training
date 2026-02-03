@@ -16,6 +16,8 @@
 - **Last Updated**: December 2025 (active development)
 - **License**: MIT
 - **Maintainer**: BMad Code, LLC (bmad-code-org)
+- **Creator**: Brian Madison (Senior Engineering Manager at Extend, Chicago-based)
+- **Community**: Active Discord, extensive YouTube tutorials
 
 ### Tool Purpose
 - **Primary Goal**: Transform AI from a one-off code helper into a structured, auditable workflow through specialized agents and facilitated development processes
@@ -48,6 +50,8 @@
 5. **Free and Open Source**: No paywalls, no gated content, no gated Discord - truly open
 6. **Party Mode**: Bring multiple agent perspectives together for collaborative decision-making
 7. **Enterprise Testing**: Test Architect module provides risk-based testing, quality gates, NFR assessment
+8. **YouTube-First Approach**: Extensive video tutorials by creator Brian Madison for visual learners
+9. **Global Adoption**: Used in Japan (GMO Media Group), US (Hireology), and published analyses worldwide
 
 ### Limitations
 - **Extreme Complexity**: 21 agents and 50+ workflows can be overwhelming for beginners
@@ -56,6 +60,8 @@
 - **Setup Overhead**: Node.js + npm + module selection + configuration
 - **Documentation Depth**: So comprehensive that finding specific workflows can be challenging
 - **Context Window Usage**: Multiple agents in Party Mode can consume context quickly
+- **Limited Production Case Studies**: Mostly tutorials and demos; fewer real-world enterprise case studies compared to Spec Kit
+- **Over Engineering Risk**: Teams may adopt workflows they don't actually need, leading to unnecessary complexity
 
 ---
 
@@ -140,9 +146,10 @@
 ### Similar Tools in Category
 | Tool | Strengths vs BMAD | Weaknesses vs BMAD |
 |------|----------------------|------------------------|
-| Spec Kit | Simpler, faster, GitHub official | Fewer agents, less comprehensive |
-| OpenSpec | Much lighter weight, easier to learn | Not enterprise-focused, fewer workflows |
-| GSD | Better for individuals, faster workflow | Less comprehensive, fewer agents |
+| Spec Kit | Simpler, faster, GitHub official, Microsoft research backing | Fewer agents, less comprehensive, MIT (same license) |
+| OpenSpec | Much lighter weight, easier to learn, 3 commands only | Not enterprise-focused, fewer workflows |
+| GSD | Better for individuals, faster workflow, atomic commits | Less comprehensive, fewer agents |
+| **BMAD + Spec Kit Integration** | "Dream combo" - BMAD for planning, Spec Kit for execution | Requires learning both tools |
 
 ### Recommendation Score
 - **For Beginners**: 3/10 (overwhelming for beginners)
@@ -260,19 +267,27 @@ git worktree list
 ## 10. RESEARCH METADATA
 
 ### Sources Consulted
-- GitHub Repository: https://github.com/bmad-code-org/BMAD-METHOD
-- Official Guide: https://bmadmethodguide.com/
-- Medium Guide: https://medium.com/@hieutrantrung.it/the-complete-business-analysts-guide-to-bmad-method-from-zero-to-expert-project-planning-in-30-3cf3995a0480
-- YouTube Masterclass: https://www.youtube.com/watch?v=LorEJPrALcg
-- Implementation Guide: https://buildmode.dev/blog/mastering-bmad-method-2025/
-- GMO Article: https://recruit.group.gmo/engineer/jisedai/blog/the-bmad-method-a-framework-for-spec-oriented-ai-driven-development/
-- Dev Labs Article: https://devlabs.angelhack.com/blog/bmad-method/
-- Comprehensive Analysis: https://redreamality.com/garden/notes/bmad-method-guide/
+- **Primary Repository**: https://github.com/bmad-code-org/BMAD-METHOD
+- **Official Guide**: https://bmadmethodguide.com/
+- **Creator**: Brian Madison (LinkedIn: https://www.linkedin.com/in/briantmadison)
+- **Integration Project**: https://github.com/oimiragieo/BMAD-SPEC-KIT (BMAD + Spec Kit)
+- **Medium Guide**: https://medium.com/@hieutrantrung.it/the-complete-business-analysts-guide-to-bmad-method-from-zero-to-expert-project-planning-in-30-3cf3995a0480
+- **YouTube Masterclass**: https://www.youtube.com/watch?v=LorEJPrALcg
+- **Implementation Guide**: https://buildmode.dev/blog/mastering-bmad-method-2025/
+- **GMO Article (Japan)**: https://recruit.group.gmo/engineer/jisedai/blog/the-bmad-method-a-framework-for-spec-oriented-ai-driven-development/
+- **Dev Labs Article**: https://devlabs.angelhack.com/blog/bmad-method/
+- **Comprehensive Analysis**: https://redreamality.com/garden/notes/bmad-method-guide/
+- **TechTarget Article**: Mentioned Hireology adoption (October 2025)
+- **EPAM Analysis**: Enterprise adoption patterns and comparison with Spec Kit
 
 ### Research Notes
-- **Gaps Identified**: Limited real-world case studies from production teams
+- **Gaps Identified**: Limited real-world case studies from production teams (mostly tutorials)
 - **Needs Verification**: Long-term adoption and maintenance patterns
 - **Community Sentiment**: Very positive among enterprise adopters, seen as comprehensive but complex
+- **Key Insight**: BMAD and Spec Kit are "structurally isomorphic" - different implementations of the same spec-driven principles
+- **Community Quote**: "Using BMAD method for planning and Spec Kit for execution? That's a dream combo right there."
+- **Enterprise Adoption**: Hireology (mentioned in TechTarget), GMO Media Group (Japan), EPAM (analysis published)
+- **Evolution Context**: Part of the progression from "Vibe Coding" → "Context-Driven Development" → "Spec-Driven Development"
 
 ### Contact Points
 - **Documentation**: https://github.com/bmad-code-org/BMAD-METHOD
